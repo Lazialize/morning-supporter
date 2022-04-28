@@ -1,0 +1,7 @@
+{
+  "name": "morning-supporter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
