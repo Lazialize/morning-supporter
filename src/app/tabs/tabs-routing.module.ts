@@ -6,11 +6,23 @@ import { TabsPage } from './tabs.page';
 const routes: Routes = [
   {
     path: '',
-    component: TabsPage,
+    redirectTo: '/tabs/home',
+    pathMatch: 'full',
   },
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then((m) => m.HomePageModule),
+    path: 'tabs',
+    component: TabsPage,
+    children: [
+      {
+        path: 'home',
+        loadChildren: () => import('./home/home.module').then((m) => m.HomePageModule),
+      },
+      {
+        path: '',
+        redirectTo: '/tabs/home',
+        pathMatch: 'full',
+      },
+    ],
   },
 ];
 
