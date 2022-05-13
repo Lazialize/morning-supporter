@@ -4,7 +4,7 @@ import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Observable, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { WeatherInfo } from '../types';
+import { WeatherInfo } from './types';
 
 const baseUrl = 'https://api.openweathermap.org/data/2.5/onecall';
 
