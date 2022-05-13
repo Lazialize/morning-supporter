@@ -37,4 +37,8 @@ export class HomePage implements OnInit {
       }
     });
   }
+
+  onTaskClicked(task: ITaskWithId) {
+    this.firestore.updateTask(task.id, { isDone: !task.isDone });
+  }
 }
