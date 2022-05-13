@@ -28,7 +28,7 @@ export class FirestoreService {
   }
 
   addTask(task: ITask) {
-    addDoc(this.taskCollection, task);
+    return addDoc(this.taskCollection, task);
   }
 
   fetchAllTask() {
