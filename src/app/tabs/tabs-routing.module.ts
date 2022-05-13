@@ -18,6 +18,10 @@ const routes: Routes = [
         loadChildren: () => import('./home/home.module').then((m) => m.HomePageModule),
       },
       {
+        path: 'task-list',
+        loadChildren: () => import('./task-list/task-list.module').then((m) => m.TaskListPageModule),
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',
