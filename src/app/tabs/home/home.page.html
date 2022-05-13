@@ -4,4 +4,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>日課進捗</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ done }}/{{ total }}
+      <ion-progress-bar value="{{ done / total }}"></ion-progress-bar>
+      <ion-list>
+        <ion-list-header>未完了の日課</ion-list-header>
+        <ion-item *ngFor="let task of uncompletedTasks">
+          <ion-checkbox slot="start" [checked]="task.isDone"></ion-checkbox>
+          <ion-label>{{ task.name }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
