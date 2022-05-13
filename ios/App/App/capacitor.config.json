@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "morning-supporter",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
