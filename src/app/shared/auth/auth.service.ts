@@ -9,6 +9,10 @@ import { firebaseError } from './firebase.error';
 export class AuthService {
   constructor(private auth: Auth, private navController: NavController, private alertController: AlertController) {}
 
+  getUserId() {
+    return this.auth.currentUser.uid;
+  }
+
   authSignUp(login: { email: string; password: string }) {
     return createUserWithEmailAndPassword(this.auth, login.email, login.password)
       .then(() => this.navController.navigateForward('/'))
