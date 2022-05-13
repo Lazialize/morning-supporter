@@ -106,6 +106,17 @@ export class TaskListPage implements OnInit {
         },
       ],
     });
+
+    if (task.isDone) {
+      actionSheet.buttons = [
+        {
+          text: '未完了に戻す',
+          icon: 'arrow-undo-outline',
+          handler: () => this.firestore.updateTask(task.id, { isDone: false }),
+        },
+        ...actionSheet.buttons,
+      ];
+    }
     actionSheet.present();
   }
 
