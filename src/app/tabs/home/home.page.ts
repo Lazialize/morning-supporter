@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
     this.firestore.updateTask(task.id, { isDone: true }).then(async () => {
       const toast = await this.toastController.create({
         message: `${task.name}を完了しました。`,
+        duration: 3000,
         buttons: [
           {
             text: '元に戻す',
