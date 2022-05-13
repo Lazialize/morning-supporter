@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { FirestoreService } from 'src/app/shared/firestore/firestore.service';
 import { ITaskWithId } from 'src/app/shared/firestore/types';
@@ -15,7 +16,11 @@ export class HomePage implements OnInit {
   total: number;
   uncompletedTasks: ITaskWithId[];
 
-  constructor(readonly weatherInfo$: WeatherService, private firestore: FirestoreService) {}
+  constructor(
+    readonly weatherInfo$: WeatherService,
+    private firestore: FirestoreService,
+    private toastController: ToastController,
+  ) {}
 
   ngOnInit() {
     this.weatherInfo$.subscribe((weatherInfo) => console.log(weatherInfo));
@@ -39,6 +44,17 @@ export class HomePage implements OnInit {
   }
 
   onTaskClicked(task: ITaskWithId) {
-    this.firestore.updateTask(task.id, { isDone: !task.isDone });
+    this.firestore.updateTask(task.id, { isDone: true }).then(async () => {
+      const toast = await this.toastController.create({
+        message: `${task.name}を完了しました。`,
+        buttons: [
+          {
+            text: '元に戻す',
+            handler: () => this.firestore.updateTask(task.id, { isDone: false }),
+          },
+        ],
+      });
+      toast.present();
+    });
   }
 }
