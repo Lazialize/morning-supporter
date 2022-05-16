@@ -15,6 +15,7 @@ import { AuthGuard } from '@angular/fire/auth-guard';
 
 import { indexedDBLocalPersistence } from 'firebase/auth';
 import { environment } from 'src/environments/environment';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { environment } from 'src/environments/environment';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    SharedModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => initializeAuth(getApp(), { persistence: indexedDBLocalPersistence })),
