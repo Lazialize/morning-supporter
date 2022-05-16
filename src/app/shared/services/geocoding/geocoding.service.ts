@@ -1,22 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { Observable, Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { GeolocationInfo } from './types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeocodingService {
-  constructor(private http: HttpClient) {}
+  private geolocationInfos$: Subject<GeolocationInfo[]>;
 
-  async getCoordinatesByAddress(address: string) {
-    return await this.http
+  constructor(private http: HttpClient) {
+    this.geolocationInfos$ = new Subject<GeolocationInfo[]>();
+  }
+
+  getGeolocationInfos(): Observable<GeolocationInfo[]> {
+    return this.geolocationInfos$.asObservable();
+  }
+
+  searchCoordinatesByAddress(address: string): void {
+    this.http
       .get<GeolocationInfo[]>('https://nominatim.openstreetmap.org/search', {
         params: {
           q: address,
           format: 'json',
         },
       })
-      .toPromise(Promise);
+      .pipe(first())
+      .forEach((next) => this.geolocationInfos$.next(next));
   }
 }

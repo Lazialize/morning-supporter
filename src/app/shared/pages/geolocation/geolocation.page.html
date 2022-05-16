@@ -11,7 +11,7 @@
   </ion-item>
   <ion-list>
     <ion-item
-      *ngFor="let location of suggestionLocations"
+      *ngFor="let location of suggestionLocations$ | async"
       [button]="true"
       (click)="onClick(location.lat, location.lon, location.display_name)"
     >

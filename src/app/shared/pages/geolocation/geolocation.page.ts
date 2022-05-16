@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { FirestoreService } from '../../services/firestore/firestore.service';
 import { GeocodingService } from '../../services/geocoding/geocoding.service';
@@ -11,7 +12,7 @@ import { GeolocationInfo } from '../../services/geocoding/types';
   styleUrls: ['./geolocation.page.scss'],
 })
 export class GeolocationPage implements OnInit {
-  suggestionLocations: GeolocationInfo[];
+  suggestionLocations$: Observable<GeolocationInfo[]>;
   searchValue: string;
 
   constructor(
@@ -19,17 +20,19 @@ export class GeolocationPage implements OnInit {
     private geocoding: GeocodingService,
     private firestore: FirestoreService,
     private auth: AuthService,
-  ) {
-    this.suggestionLocations = [];
-  }
+  ) {}
 
   ngOnInit() {}
+
+  ionViewWillEnter() {
+    this.suggestionLocations$ = this.geocoding.getGeolocationInfos();
+  }
 
   async valueChanged() {
     if (this.searchValue === '') {
       return;
     }
-    this.suggestionLocations = await this.geocoding.getCoordinatesByAddress(this.searchValue);
+    this.geocoding.searchCoordinatesByAddress(this.searchValue);
   }
 
   dismissModal() {
