@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { AuthService } from '../../services/auth/auth.service';
+import { FirestoreService } from '../../services/firestore/firestore.service';
 import { GeocodingService } from '../../services/geocoding/geocoding.service';
 import { GeolocationInfo } from '../../services/geocoding/types';
 
@@ -12,7 +14,12 @@ export class GeolocationPage implements OnInit {
   suggestionLocations: GeolocationInfo[];
   searchValue: string;
 
-  constructor(private modalController: ModalController, private geocoding: GeocodingService) {
+  constructor(
+    private modalController: ModalController,
+    private geocoding: GeocodingService,
+    private firestore: FirestoreService,
+    private auth: AuthService,
+  ) {
     this.suggestionLocations = [];
   }
 
@@ -32,6 +39,13 @@ export class GeolocationPage implements OnInit {
   onClick(lat: string, lon: string, name: string) {
     // this.localStorageService.save(LocalStorageKey.location, { lat, lon, name });
     console.log({ name, lat, lon });
+    this.firestore.setUserSettings(this.auth.getUserId(), {
+      location: {
+        name,
+        lat,
+        lon,
+      },
+    });
     this.dismissModal();
   }
 }

@@ -8,3 +8,15 @@ export interface ITask {
 export interface ITaskWithId extends ITask {
   id: string;
 }
+
+export interface IUserSetting {
+  location: {
+    name: string;
+    lat: string;
+    lon: string;
+  };
+}
+
+export interface IUserSettingWithId extends IUserSetting {
+  id?: string;
+}
