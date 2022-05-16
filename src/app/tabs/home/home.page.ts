@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { ITaskWithId } from 'src/app/shared/services/firestore/types';
+import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
+import { WeatherInfo } from 'src/app/shared/services/weather/types';
 import { WeatherService } from 'src/app/shared/services/weather/weather.service';
 
 @Component({
@@ -12,6 +14,8 @@ import { WeatherService } from 'src/app/shared/services/weather/weather.service'
 })
 export class HomePage implements OnInit {
   tasks$: Observable<ITaskWithId[]>;
+  weatherInfo$: Observable<WeatherInfo>;
+  userSettings$: Observable<IUserSetting>;
   done: number;
   total: number;
   uncompletedTasks: ITaskWithId[];
@@ -22,7 +26,8 @@ export class HomePage implements OnInit {
   }[];
 
   constructor(
-    readonly weatherInfo$: WeatherService,
+    private auth: AuthService,
+    private weather: WeatherService,
     private firestore: FirestoreService,
     private toastController: ToastController,
   ) {
@@ -32,6 +37,18 @@ export class HomePage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter() {
+    this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
+    this.weatherInfo$ = this.weather.getWeatherInfo();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.weather.updateWeatherInformation(position.coords.latitude, position.coords.longitude);
+      },
+      () => {
+        this.userSettings$.subscribe((settings) => {
+          this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
+        });
+      },
+    );
     console.log('ionViewWillEnter');
     this.weatherInfo$.subscribe((weatherInfo) => {
       this.notifications = [];
