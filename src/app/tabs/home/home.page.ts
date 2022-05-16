@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { FirestoreService } from 'src/app/shared/firestore/firestore.service';
-import { ITaskWithId } from 'src/app/shared/firestore/types';
-import { WeatherService } from 'src/app/shared/weather/weather.service';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
+import { ITaskWithId } from 'src/app/shared/services/firestore/types';
+import { WeatherService } from 'src/app/shared/services/weather/weather.service';
 
 @Component({
   selector: 'app-home',
