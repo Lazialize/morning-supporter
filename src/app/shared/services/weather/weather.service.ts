@@ -1,9 +1,11 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Observable, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { GeolocationPage } from '../../pages/geolocation/geolocation.page';
 import { WeatherInfo } from './types';
 
 const baseUrl = 'https://api.openweathermap.org/data/2.5/onecall';
@@ -12,7 +14,11 @@ const baseUrl = 'https://api.openweathermap.org/data/2.5/onecall';
   providedIn: 'root',
 })
 export class WeatherService extends Observable<WeatherInfo> {
-  constructor(private http: HttpClient, private readonly geolocation$: GeolocationService) {
+  constructor(
+    private http: HttpClient,
+    private readonly geolocation$: GeolocationService,
+    modalController: ModalController,
+  ) {
     super();
     const subject = new Subject<WeatherInfo>();
     this.geolocation$.subscribe(
@@ -23,6 +29,11 @@ export class WeatherService extends Observable<WeatherInfo> {
       (err) => {
         // Returns the weather info of the Tokyo if an error occurred in getting the current coordinates.
         // TODO: It is a provisional implementation, so I will re-implement it to get the weather info by the set upped coordinates.
+        modalController
+          .create({
+            component: GeolocationPage,
+          })
+          .then((modal) => modal.present());
         this.fetchWetherInformation(36, 140)
           .pipe(shareReplay({ bufferSize: 1, refCount: true }))
           .subscribe((weatherInfo) => subject.next(weatherInfo));

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ActionSheetController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/shared/auth/auth.service';
-import { FirestoreService } from 'src/app/shared/firestore/firestore.service';
-import { ITaskWithId } from 'src/app/shared/firestore/types';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
+import { ITaskWithId } from 'src/app/shared/services/firestore/types';
 
 @Component({
   selector: 'app-task-list',
