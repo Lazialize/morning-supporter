@@ -53,7 +53,7 @@ export class WeatherService extends Observable<WeatherInfo> {
         lon,
         limit,
         units: 'metric',
-        exclude: ['current', 'minutely', 'hourly', 'alerts'].join(','),
+        exclude: ['minutely', 'hourly', 'alerts'].join(','),
         appid: environment.openWether.apiKey,
       },
     });

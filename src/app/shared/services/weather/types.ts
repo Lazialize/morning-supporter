@@ -7,10 +7,30 @@ interface Weather {
   icon: string;
 }
 
-interface DayWether {
+interface BaseWeather {
   dt: number;
   sunrise: number;
   sunset: number;
+  pressure: number;
+  humidity: number;
+  dew_point: number;
+  wind_speed: number;
+  wind_deg: number;
+  uvi: number;
+  clouds: number;
+  weather: Weather[];
+}
+
+interface CurrentWeather extends BaseWeather {
+  temp: number;
+  feels_like: number;
+  visibility: number;
+  rain: {
+    '1h': number;
+  };
+}
+
+interface DayWether extends BaseWeather {
   moonrise: number;
   moonset: number;
   moon_phase: number;
@@ -28,16 +48,8 @@ interface DayWether {
     eve: number;
     morn: number;
   };
-  pressure: number;
-  humidity: number;
-  dew_point: number;
-  wind_speed: number;
-  wind_deg: number;
-  weather: Weather[];
-  clouds: number;
   pop: number;
   rain: number;
-  uvi: number;
 }
 
 export interface WeatherInfo {
@@ -45,5 +57,6 @@ export interface WeatherInfo {
   lon: number;
   timezone: string;
   timezone_offset: number;
+  current: CurrentWeather;
   daily: DayWether[];
 }
