@@ -1,7 +1,21 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>geolocation</ion-title>
+    <ion-title>気象情報取得の位置設定</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-item>
+    <ion-label>都市名</ion-label>
+    <ion-input [(ngModel)]="searchValue" debounce="1000" (ionChange)="valueChanged()"></ion-input>
+  </ion-item>
+  <ion-list>
+    <ion-item
+      *ngFor="let location of suggestionLocations"
+      [button]="true"
+      (click)="onClick(location.lat, location.lon, location.display_name)"
+    >
+      <ion-label>{{ location.display_name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
