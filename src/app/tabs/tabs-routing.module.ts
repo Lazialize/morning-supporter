@@ -22,6 +22,10 @@ const routes: Routes = [
         loadChildren: () => import('./task-list/task-list.module').then((m) => m.TaskListPageModule),
       },
       {
+        path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then((m) => m.SettingsPageModule),
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',
