@@ -17,7 +17,7 @@ export class WeatherService extends Observable<WeatherInfo> {
   constructor(
     private http: HttpClient,
     private readonly geolocation$: GeolocationService,
-    modalController: ModalController,
+    private modalController: ModalController,
   ) {
     super();
     const subject = new Subject<WeatherInfo>();
