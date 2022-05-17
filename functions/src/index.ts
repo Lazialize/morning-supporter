@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 const firestore = admin.firestore();
 
 export const dayStartBatch = functions.pubsub
-  .schedule('every 24 hours')
+  .schedule('every day 00:00')
   .timeZone('Asia/Tokyo')
   .onRun((context) => {
     const taskRef = firestore.collection('tasks');
