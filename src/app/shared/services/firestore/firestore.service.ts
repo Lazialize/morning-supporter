@@ -87,4 +87,9 @@ export class FirestoreService {
     const userRef = doc(this.firestore, `users/${id}`);
     return setDoc(userRef, data);
   }
+
+  updateUserSettings(id: string, data: { [key: string]: any }) {
+    const userRef = doc(this.firestore, `users/${id}`);
+    return updateDoc(userRef, data);
+  }
 }

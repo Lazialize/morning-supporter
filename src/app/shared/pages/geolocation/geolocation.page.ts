@@ -40,7 +40,7 @@ export class GeolocationPage implements OnInit {
   onClick(lat: string, lon: string, name: string) {
     // this.localStorageService.save(LocalStorageKey.location, { lat, lon, name });
     console.log({ name, lat, lon });
-    this.firestore.setUserSettings(this.auth.getUserId(), {
+    this.firestore.updateUserSettings(this.auth.getUserId(), {
       location: {
         name,
         lat,

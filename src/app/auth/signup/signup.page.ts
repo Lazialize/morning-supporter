@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 
 @Component({
   selector: 'app-signup',
@@ -16,12 +17,24 @@ export class SignupPage implements OnInit {
     password: null,
   };
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, private firestore: FirestoreService) {}
 
   ngOnInit() {}
 
   signUp() {
     this.loading = true;
-    this.auth.authSignUp(this.login).finally(() => (this.loading = false));
+    this.auth
+      .authSignUp(this.login)
+      .then(() => {
+        this.firestore.setUserSettings(this.auth.getUserId(), {
+          location: {
+            lat: null,
+            lon: null,
+            name: null,
+          },
+          attendanceTime: null,
+        });
+      })
+      .finally(() => (this.loading = false));
   }
 }
