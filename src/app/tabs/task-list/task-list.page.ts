@@ -61,6 +61,16 @@ export class TaskListPage implements OnInit {
       header: task.name,
       buttons: [
         {
+          text: '閉じる',
+          role: 'cancel',
+          icon: 'close',
+        },
+      ],
+    });
+
+    if (!task.isTemporary) {
+      actionSheet.buttons = [
+        {
           text: '名称変更',
           handler: async () => {
             const alert = await this.alert.create({
@@ -98,13 +108,9 @@ export class TaskListPage implements OnInit {
           role: 'destructive',
           icon: 'trash',
         },
-        {
-          text: '閉じる',
-          role: 'cancel',
-          icon: 'close',
-        },
-      ],
-    });
+        ...actionSheet.buttons,
+      ];
+    }
 
     if (task.isDone) {
       actionSheet.buttons = [
