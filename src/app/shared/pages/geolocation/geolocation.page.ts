@@ -22,9 +22,7 @@ export class GeolocationPage implements OnInit {
     private auth: AuthService,
   ) {}
 
-  ngOnInit() {}
-
-  ionViewWillEnter() {
+  ngOnInit() {
     this.suggestionLocations$ = this.geocoding.getGeolocationInfos();
   }
 

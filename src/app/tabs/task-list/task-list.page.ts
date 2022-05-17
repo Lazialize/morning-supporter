@@ -20,9 +20,7 @@ export class TaskListPage implements OnInit {
     private toast: ToastController,
   ) {}
 
-  ngOnInit() {}
-
-  ionViewWillEnter() {
+  ngOnInit() {
     this.tasks$ = this.firestore.fetchAllTask();
   }
 
