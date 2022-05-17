@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { IonDatetime, IonPopover, ModalController, PopoverController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
+import { IUserSetting } from 'src/app/shared/services/firestore/types';
 
 @Component({
   selector: 'app-settings',
@@ -9,9 +12,24 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-  constructor(private auth: AuthService, private modalController: ModalController) {}
+  @ViewChildren(IonDatetime) datetime: QueryList<IonDatetime>;
+  @ViewChildren(IonPopover) popover: QueryList<IonPopover>;
 
-  ngOnInit() {}
+  userSettings$: Observable<IUserSetting>;
+
+  locationName: string;
+  constructor(
+    private auth: AuthService,
+    private modalController: ModalController,
+    private firestore: FirestoreService,
+  ) {}
+
+  ngOnInit() {
+    this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
+    this.userSettings$.subscribe((settings) => {
+      this.locationName = settings.location.name;
+    });
+  }
 
   async openModal() {
     this.modalController
@@ -23,5 +41,22 @@ export class SettingsPage implements OnInit {
 
   signOut() {
     this.auth.authSignOut();
+  }
+
+  confirm() {
+    this.datetime
+      .get(0)
+      .confirm()
+      .then(() => {
+        const date = new Date(this.datetime.get(0).value);
+        this.firestore.updateUserSettings(this.auth.getUserId(), {
+          attendanceTime: this.datetime.get(0).value,
+        });
+      });
+    this.popover.get(0).dismiss();
+  }
+
+  close() {
+    this.popover.get(0).dismiss();
   }
 }

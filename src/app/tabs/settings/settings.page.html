@@ -6,8 +6,28 @@
 
 <ion-content>
   <ion-list>
-    <ion-item [button]="true" (click)="openModal()">
+    <ion-item>
       <ion-label>位置情報の設定</ion-label>
+      <ion-label slot="end" color="medium">{{ locationName }}</ion-label>
+      <ion-button fill="clear" slot="end" (click)="openModal()">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>出勤時間(家を出る時間)の設定</ion-label>
+      <ion-button fill="clear" id="open-timepicker" slot="end">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
+      <ion-popover trigger="open-timepicker">
+        <ng-template>
+          <ion-datetime presentation="time" value="2012-12-15T09:00:00+09:00">
+            <ion-buttons slot="buttons">
+              <ion-button (click)="confirm()">確定</ion-button>
+              <ion-button (click)="close()">閉じる</ion-button>
+            </ion-buttons>
+          </ion-datetime>
+        </ng-template>
+      </ion-popover>
     </ion-item>
     <ion-item [button]="true" (click)="signOut()">
       <ion-label>ログアウト</ion-label>
