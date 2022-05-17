@@ -60,6 +60,8 @@ export class HomePage implements OnInit, OnDestroy {
     );
 
     this.notificationSubscription = this.weatherInfo$.subscribe((weatherInfo) => {
+      console.log(weatherInfo);
+      this.notification.initialize();
       if (this.notification.addCurrentNotification(weatherInfo.current.weather[0].id)) {
         return;
       }

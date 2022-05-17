@@ -25,8 +25,8 @@ export class NotificationService {
   }
 
   initialize(): void {
-    this.notifications = new Subject<INotification[]>();
     this.notificationCollection = [];
+    this.notifications.next(this.notificationCollection);
   }
 
   getNotifications(): Observable<INotification[]> {
