@@ -36,6 +36,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) {
     this.userSettingSubscription = null;
     this.notificationSubscription = null;
+    this.progressSubscription = null;
   }
 
   ngOnInit(): void {
@@ -66,7 +67,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id);
     });
 
-    this.tasks$.subscribe((tasks) => {
+    this.progressSubscription = this.tasks$.subscribe((tasks) => {
       this.done = 0;
       this.total = 0;
       this.uncompletedTasks = [];
