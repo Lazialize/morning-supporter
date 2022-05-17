@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
@@ -12,7 +12,7 @@ import { WeatherService } from 'src/app/shared/services/weather/weather.service'
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   tasks$: Observable<ITaskWithId[]>;
   weatherInfo$: Observable<WeatherInfo>;
   userSettings$: Observable<IUserSetting>;
@@ -25,6 +25,10 @@ export class HomePage implements OnInit {
     message: string;
   }[];
 
+  private userSettingSubscription: Subscription;
+  private notificationSubscription: Subscription;
+  private progressSubscription: Subscription;
+
   constructor(
     private auth: AuthService,
     private weather: WeatherService,
@@ -32,25 +36,29 @@ export class HomePage implements OnInit {
     private toastController: ToastController,
   ) {
     this.notifications = [];
+    this.userSettingSubscription = null;
+    this.notificationSubscription = null;
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.weather.initializeWeatherInfo();
 
-  ionViewWillEnter() {
     this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
     this.weatherInfo$ = this.weather.getWeatherInfo();
+    this.tasks$ = this.firestore.fetchAllTask();
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.weather.updateWeatherInformation(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        this.userSettings$.subscribe((settings) => {
+        this.userSettingSubscription = this.userSettings$.subscribe((settings) => {
           this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
         });
       },
     );
-    console.log('ionViewWillEnter');
-    this.weatherInfo$.subscribe((weatherInfo) => {
+
+    this.notificationSubscription = this.weatherInfo$.subscribe((weatherInfo) => {
       this.notifications = [];
       let weatherId = Math.floor(weatherInfo.current.weather[0].id / 100);
 
@@ -80,7 +88,6 @@ export class HomePage implements OnInit {
       }
     });
 
-    this.tasks$ = this.firestore.fetchAllTask();
     this.tasks$.subscribe((tasks) => {
       this.done = 0;
       this.total = 0;
@@ -94,6 +101,12 @@ export class HomePage implements OnInit {
         this.total++;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.userSettingSubscription.unsubscribe();
+    this.notificationSubscription.unsubscribe();
+    this.progressSubscription.unsubscribe();
   }
 
   onTaskClicked(task: ITaskWithId) {
