@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngFor="let notification of notifications">
+  <ion-card *ngFor="let notification of notifications$ | async">
     <ion-item color="{{ notification.color }}" lines="none">
       <ion-icon slot="start" name="{{ notification.icon }}"></ion-icon>
       <ion-label>{{ notification.message }}</ion-label>

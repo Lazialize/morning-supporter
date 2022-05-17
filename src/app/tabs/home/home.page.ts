@@ -6,6 +6,8 @@ import { FirestoreService } from 'src/app/shared/services/firestore/firestore.se
 import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
 import { WeatherInfo } from 'src/app/shared/services/weather/types';
 import { WeatherService } from 'src/app/shared/services/weather/weather.service';
+import INotification from './services/notification/interfaces/notification';
+import { NotificationService } from './services/notification/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -16,14 +18,10 @@ export class HomePage implements OnInit, OnDestroy {
   tasks$: Observable<ITaskWithId[]>;
   weatherInfo$: Observable<WeatherInfo>;
   userSettings$: Observable<IUserSetting>;
+  notifications$: Observable<INotification[]>;
   done: number;
   total: number;
   uncompletedTasks: ITaskWithId[];
-  notifications: {
-    color: string;
-    icon: string;
-    message: string;
-  }[];
 
   private userSettingSubscription: Subscription;
   private notificationSubscription: Subscription;
@@ -32,20 +30,22 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private weather: WeatherService,
+    private notification: NotificationService,
     private firestore: FirestoreService,
     private toastController: ToastController,
   ) {
-    this.notifications = [];
     this.userSettingSubscription = null;
     this.notificationSubscription = null;
   }
 
   ngOnInit(): void {
     this.weather.initializeWeatherInfo();
+    this.notification.initialize();
 
     this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
     this.weatherInfo$ = this.weather.getWeatherInfo();
     this.tasks$ = this.firestore.fetchAllTask();
+    this.notifications$ = this.notification.getNotifications();
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -59,33 +59,11 @@ export class HomePage implements OnInit, OnDestroy {
     );
 
     this.notificationSubscription = this.weatherInfo$.subscribe((weatherInfo) => {
-      this.notifications = [];
-      let weatherId = Math.floor(weatherInfo.current.weather[0].id / 100);
-
-      let icon = 'alert-circle-outline';
-      let color = 'danger';
-      if (weatherId === 2) {
-        this.notifications.push({ icon, color, message: '現在，雷雨が降っています。' });
-      } else if (weatherId === 3) {
-        this.notifications.push({ icon, color, message: '現在，霧雨が降っています。' });
-      } else if (weatherId === 5) {
-        this.notifications.push({ icon, color, message: '現在，雨が降っています。' });
-      } else if (weatherId === 6) {
-        this.notifications.push({ icon, color, message: '現在，雪が降っています。' });
+      if (this.notification.addCurrentNotification(weatherInfo.current.weather[0].id)) {
+        return;
       }
 
-      weatherId = Math.floor(weatherInfo.daily[0].weather[0].id / 100);
-      icon = 'alert-outline';
-      color = 'warning';
-      if (weatherId === 2) {
-        this.notifications.push({ icon, color, message: '今日は雷雨が降る予定です。' });
-      } else if (weatherId === 3) {
-        this.notifications.push({ icon, color, message: '今日は霧雨が降る予定です。' });
-      } else if (weatherId === 5) {
-        this.notifications.push({ icon, color, message: '今日は雨が降る予定です。' });
-      } else if (weatherId === 6) {
-        this.notifications.push({ icon, color, message: '今日は雪が降る予定です。' });
-      }
+      this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id);
     });
 
     this.tasks$.subscribe((tasks) => {
