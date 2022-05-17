@@ -3,6 +3,7 @@ export interface ITask {
   name: string;
   timestamp: number;
   isDone: boolean;
+  isTemporary: boolean;
 }
 
 export interface ITaskWithId extends ITask {

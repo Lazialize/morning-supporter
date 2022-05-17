@@ -46,6 +46,7 @@ export class TaskListPage implements OnInit {
                 name: data.name,
                 timestamp: Date.now(),
                 isDone: false,
+                isTemporary: false,
               })
               .then(() => this.popToast(`${data.name}を追加しました。`));
           },

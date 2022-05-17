@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
@@ -63,10 +64,40 @@ export class HomePage implements OnInit, OnDestroy {
       console.log(weatherInfo);
       this.notification.initialize();
       if (this.notification.addCurrentNotification(weatherInfo.current.weather[0].id)) {
+        this.firestore
+          .fetchTempTaskByName('傘を持っていく')
+          .pipe(first())
+          .forEach((tasks) => {
+            if (tasks.length > 0) {
+              return;
+            }
+            this.firestore.addTask({
+              name: '傘を持っていく',
+              uid: this.auth.getUserId(),
+              timestamp: Date.now(),
+              isDone: false,
+              isTemporary: true,
+            });
+          });
         return;
       }
 
       this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id);
+      this.firestore
+        .fetchTempTaskByName('傘を持っていく')
+        .pipe(first())
+        .forEach((tasks) => {
+          if (tasks.length > 0) {
+            return;
+          }
+          this.firestore.addTask({
+            name: '傘を鞄に入れる',
+            uid: this.auth.getUserId(),
+            timestamp: Date.now(),
+            isDone: false,
+            isTemporary: true,
+          });
+        });
     });
 
     this.progressSubscription = this.tasks$.subscribe((tasks) => {

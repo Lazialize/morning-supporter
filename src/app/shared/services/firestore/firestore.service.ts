@@ -46,6 +46,20 @@ export class FirestoreService {
     return docData(taskRef, { idField: 'id' }) as Observable<ITaskWithId>;
   }
 
+  fetchTempTaskByName(name: string) {
+    return collectionData(
+      query(
+        this.taskCollection,
+        where('uid', '==', this.auth.getUserId()),
+        where('name', '==', name),
+        where('isTemporary', '==', true),
+      ),
+      {
+        idField: 'id',
+      },
+    ) as Observable<ITaskWithId[]>;
+  }
+
   updateTask(id: string, data: { [key: string]: any }) {
     const taskRef = this.getTaskDocRef(id);
     return updateDoc(taskRef, data);
