@@ -68,34 +68,45 @@ export class HomePage implements OnInit, OnDestroy {
           } else {
             this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
           }
-
-          if (settings.attendanceTime !== null) {
-            const minute =
-              settings.attendanceTime % 100 >= 30 ? settings.attendanceTime - 30 : 60 - (30 - settings.attendanceTime);
-            const hour =
-              settings.attendanceTime - 30 === minute
-                ? Math.floor(settings.attendanceTime / 100)
-                : Math.floor(settings.attendanceTime / 100) - 1;
-            LocalNotifications.requestPermissions();
-            LocalNotifications.schedule({
-              notifications: [
-                {
-                  id: 1,
-                  title: '出勤時間30分前',
-                  body: '朝のタスクは完了しましたか？',
-                  schedule: {
-                    on: {
-                      hour,
-                      minute,
-                    },
-                  },
-                },
-              ],
-            });
-          }
         });
       },
     );
+
+    this.userSettings$.subscribe((settings) => {
+      if (settings.attendanceTime !== null) {
+        const minute =
+          settings.attendanceTime % 100 >= 30
+            ? (settings.attendanceTime % 100) - 30
+            : 60 - (30 - (settings.attendanceTime % 100));
+        const hour =
+          (settings.attendanceTime % 100) - 30 === minute
+            ? Math.floor(settings.attendanceTime / 100)
+            : Math.floor(settings.attendanceTime / 100) - 1;
+        LocalNotifications.cancel({
+          notifications: [
+            {
+              id: 1,
+            },
+          ],
+        });
+        LocalNotifications.requestPermissions();
+        LocalNotifications.schedule({
+          notifications: [
+            {
+              id: 1,
+              title: '出勤時間30分前',
+              body: '朝のタスクは完了しましたか？',
+              schedule: {
+                on: {
+                  hour,
+                  minute,
+                },
+              },
+            },
+          ],
+        });
+      }
+    });
 
     this.notificationSubscription = this.weatherInfo$.subscribe((weatherInfo) => {
       console.log(weatherInfo);
