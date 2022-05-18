@@ -50,7 +50,7 @@ export class SettingsPage implements OnInit {
       .then(() => {
         const date = new Date(this.datetime.get(0).value);
         this.firestore.updateUserSettings(this.auth.getUserId(), {
-          attendanceTime: this.datetime.get(0).value,
+          attendanceTime: date.getHours() * 100 + date.getMinutes(),
         });
       });
     this.popover.get(0).dismiss();
