@@ -65,7 +65,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.notification.initialize();
       if (this.notification.addCurrentNotification(weatherInfo.current.weather[0].id)) {
         this.firestore
-          .fetchTempTaskByName('傘を持っていく')
+          .fetchTempTaskByName(this.auth.getUserId(), '傘を持っていく')
           .pipe(first())
           .forEach((tasks) => {
             if (tasks.length > 0) {
@@ -84,7 +84,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id);
       this.firestore
-        .fetchTempTaskByName('傘を持っていく')
+        .fetchTempTaskByName(this.auth.getUserId(), '傘を鞄に入れる')
         .pipe(first())
         .forEach((tasks) => {
           if (tasks.length > 0) {
