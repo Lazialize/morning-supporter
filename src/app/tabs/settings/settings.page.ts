@@ -17,7 +17,6 @@ export class SettingsPage implements OnInit {
 
   userSettings$: Observable<IUserSetting>;
 
-  locationName: string;
   constructor(
     private auth: AuthService,
     private modalController: ModalController,
@@ -26,9 +25,6 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
-    this.userSettings$.subscribe((settings) => {
-      this.locationName = settings.location.name;
-    });
   }
 
   async openModal() {
