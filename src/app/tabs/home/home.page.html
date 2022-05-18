@@ -20,7 +20,7 @@
       <ion-progress-bar value="{{ done / total }}"></ion-progress-bar>
       <ion-list>
         <ion-list-header>未完了の日課</ion-list-header>
-        <ion-item *ngFor="let task of uncompletedTasks">
+        <ion-item *ngFor="let task of uncompletedTasks; trackBy: trackByFn">
           <ion-checkbox slot="start" [checked]="task.isDone" (click)="onTaskClicked(task)"></ion-checkbox>
           <ion-label>{{ task.name }}</ion-label>
         </ion-item>

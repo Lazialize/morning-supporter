@@ -184,4 +184,8 @@ export class HomePage implements OnInit, OnDestroy {
       toast.present();
     });
   }
+
+  trackByFn(index, item: ITaskWithId) {
+    return item.id;
+  }
 }

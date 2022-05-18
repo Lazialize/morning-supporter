@@ -12,7 +12,11 @@
   </ion-fab>
 
   <ion-list>
-    <ion-item *ngFor="let task of tasks$ | async" [button]="true" (click)="openActionSheetOfTask(task)">
+    <ion-item
+      *ngFor="let task of tasks$ | async; trackBy: trackByFn"
+      [button]="true"
+      (click)="openActionSheetOfTask(task)"
+    >
       <ion-label>{{ task.name }}</ion-label>
     </ion-item>
   </ion-list>

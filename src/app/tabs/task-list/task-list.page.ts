@@ -125,6 +125,10 @@ export class TaskListPage implements OnInit {
     actionSheet.present();
   }
 
+  trackByFn(index, item: ITaskWithId) {
+    return item.id;
+  }
+
   private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'bottom') {
     this.toast
       .create({
