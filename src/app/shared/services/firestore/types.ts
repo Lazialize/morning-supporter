@@ -16,7 +16,7 @@ export interface IUserSetting {
     lat: string;
     lon: string;
   };
-  attendanceTime: string;
+  attendanceTime: number;
 }
 
 export interface IUserSettingWithId extends IUserSetting {
