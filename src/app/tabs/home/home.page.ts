@@ -90,24 +90,23 @@ export class HomePage implements OnInit, OnDestroy {
             });
           });
         return;
-      }
-
-      this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id);
-      this.firestore
-        .fetchTempTaskByName(this.auth.getUserId(), '傘を鞄に入れる')
-        .pipe(first())
-        .forEach((tasks) => {
-          if (tasks.length > 0) {
-            return;
-          }
-          this.firestore.addTask({
-            name: '傘を鞄に入れる',
-            uid: this.auth.getUserId(),
-            timestamp: Date.now(),
-            isDone: false,
-            isTemporary: true,
+      } else if (this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id)) {
+        this.firestore
+          .fetchTempTaskByName(this.auth.getUserId(), '傘を鞄に入れる')
+          .pipe(first())
+          .forEach((tasks) => {
+            if (tasks.length > 0) {
+              return;
+            }
+            this.firestore.addTask({
+              name: '傘を鞄に入れる',
+              uid: this.auth.getUserId(),
+              timestamp: Date.now(),
+              isDone: false,
+              isTemporary: true,
+            });
           });
-        });
+      }
     });
 
     this.progressSubscription = this.tasks$.subscribe((tasks) => {
