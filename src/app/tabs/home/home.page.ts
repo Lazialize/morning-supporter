@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
@@ -34,6 +35,7 @@ export class HomePage implements OnInit, OnDestroy {
     private notification: NotificationService,
     private firestore: FirestoreService,
     private toastController: ToastController,
+    private modalController: ModalController,
   ) {
     this.userSettingSubscription = null;
     this.notificationSubscription = null;
@@ -55,7 +57,15 @@ export class HomePage implements OnInit, OnDestroy {
       },
       () => {
         this.userSettingSubscription = this.userSettings$.subscribe((settings) => {
-          this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
+          if (settings.location.lat === null || settings.location.lon === null || settings.location.name === null) {
+            this.modalController
+              .create({
+                component: GeolocationPage,
+              })
+              .then((modal) => modal.present());
+          } else {
+            this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
+          }
         });
       },
     );
