@@ -80,10 +80,10 @@ export class HomePage implements OnInit, OnDestroy {
         const minute = attendanceMinute >= 30 ? attendanceMinute - 30 : 60 - (30 - attendanceMinute);
         const hour = attendanceMinute - 30 === minute ? attendanceHour : attendanceHour - 1;
 
+        LocalNotifications.requestPermissions();
         LocalNotifications.cancel({
           notifications: [{ id: 1 }],
         });
-        LocalNotifications.requestPermissions();
         LocalNotifications.schedule({
           notifications: [
             {
