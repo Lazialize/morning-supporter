@@ -17,6 +17,7 @@ export interface IUserSetting {
     lon: string;
   };
   attendanceTime: number;
+  notificationTime: number;
 }
 
 export interface IUserSettingWithId extends IUserSetting {
