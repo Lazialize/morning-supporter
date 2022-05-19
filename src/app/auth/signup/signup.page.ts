@@ -11,6 +11,13 @@ const defaultSettings = (): IUserSetting => ({
   },
   attendanceTime: 930,
   notificationTime: 30,
+  temporaryTasks: [
+    {
+      name: '傘を鞄に入れる',
+      tense: [0, 1],
+      conditions: [2, 3, 5, 6],
+    },
+  ],
 });
 
 @Component({

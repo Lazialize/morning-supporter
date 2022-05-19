@@ -18,6 +18,11 @@ export interface IUserSetting {
   };
   attendanceTime: number;
   notificationTime: number;
+  temporaryTasks: {
+    name: string;
+    tense: number[];
+    conditions: number[];
+  }[];
 }
 
 export interface IUserSettingWithId extends IUserSetting {
