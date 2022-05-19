@@ -65,10 +65,6 @@ export class FirestoreService {
     return deleteDoc(taskRef);
   }
 
-  private getTaskDocRef(id: string) {
-    return doc(this.firestore, `tasks/${id}`);
-  }
-
   getUserSettingsById(id: string) {
     const userRef = doc(this.firestore, `users/${id}`);
     return docData(userRef, { idField: 'id' }) as Observable<IUserSettingWithId>;
@@ -76,7 +72,7 @@ export class FirestoreService {
 
   setUserSettings(id: string, data: IUserSetting | IUserSettingWithId) {
     if ('id' in Object.keys(data)) {
-      delete data['id'];
+      delete (data as IUserSettingWithId).id;
     }
 
     const userRef = doc(this.firestore, `users/${id}`);
@@ -86,5 +82,9 @@ export class FirestoreService {
   updateUserSettings(id: string, data: { [key: string]: any }) {
     const userRef = doc(this.firestore, `users/${id}`);
     return updateDoc(userRef, data);
+  }
+
+  private getTaskDocRef(id: string) {
+    return doc(this.firestore, `tasks/${id}`);
   }
 }
