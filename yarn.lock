@@ -1961,20 +1961,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@ng-web-apis/common@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@ng-web-apis/common/-/common-2.0.0.tgz#6a90f2eb575a595e6fee36f7f57ec38ca901aa17"
-  integrity sha512-2Vnp4WTEqKZArhbKLgD1JIKjsDa3hWCa67OWaRWRH5sgX5xneVVaIAvC8gVpiCfl2p1Roen2kxfyYngx7G64SQ==
-  dependencies:
-    tslib "^2.2.0"
-
-"@ng-web-apis/geolocation@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@ng-web-apis/geolocation/-/geolocation-1.0.4.tgz#6b13e203c23d37e126f17dd7e4115b1e435e21b3"
-  integrity sha512-k7nl/auLUiknkL1BWzVGvwfPO4Tu5pYhMJeCfQaHC/sHk1ZzSX3lVNJYOV4qZbHUyuBht7KespF63YIYkLUhDA==
-  dependencies:
-    tslib "^1.9.0"
-
 "@ngtools/webpack@13.2.6":
   version "13.2.6"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-13.2.6.tgz#8fe9c54dce13ec291eeef352ed773b77d1d0bed0"
