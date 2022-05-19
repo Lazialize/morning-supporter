@@ -74,20 +74,14 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.userSettings$.subscribe((settings) => {
       if (settings.attendanceTime !== null) {
-        const minute =
-          settings.attendanceTime % 100 >= 30
-            ? (settings.attendanceTime % 100) - 30
-            : 60 - (30 - (settings.attendanceTime % 100));
-        const hour =
-          (settings.attendanceTime % 100) - 30 === minute
-            ? Math.floor(settings.attendanceTime / 100)
-            : Math.floor(settings.attendanceTime / 100) - 1;
+        const attendanceMinute = settings.attendanceTime % 100;
+        const attendanceHour = Math.floor(settings.attendanceTime / 100);
+
+        const minute = attendanceMinute >= 30 ? attendanceMinute - 30 : 60 - (30 - attendanceMinute);
+        const hour = attendanceMinute - 30 === minute ? attendanceHour : attendanceHour - 1;
+
         LocalNotifications.cancel({
-          notifications: [
-            {
-              id: 1,
-            },
-          ],
+          notifications: [{ id: 1 }],
         });
         LocalNotifications.requestPermissions();
         LocalNotifications.schedule({
