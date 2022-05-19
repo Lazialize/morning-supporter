@@ -70,6 +70,9 @@ export class HomePage implements OnInit, OnDestroy {
           }
         });
       },
+      {
+        timeout: 1000,
+      },
     );
 
     this.userSettings$.subscribe((settings) => {
