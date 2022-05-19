@@ -1,6 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
+import { IUserSetting } from 'src/app/shared/services/firestore/types';
+
+const defaultSettings = (): IUserSetting => ({
+  location: {
+    lat: null,
+    lon: null,
+    name: null,
+  },
+  attendanceTime: 930,
+  notificationTime: 30,
+});
 
 @Component({
   selector: 'app-signup',
@@ -26,14 +37,7 @@ export class SignupPage implements OnInit {
     this.auth
       .authSignUp(this.login)
       .then(() => {
-        this.firestore.setUserSettings(this.auth.getUserId(), {
-          location: {
-            lat: null,
-            lon: null,
-            name: null,
-          },
-          attendanceTime: null,
-        });
+        this.firestore.setUserSettings(this.auth.getUserId(), defaultSettings());
       })
       .finally(() => (this.loading = false));
   }
