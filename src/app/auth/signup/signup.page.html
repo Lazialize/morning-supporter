@@ -20,7 +20,10 @@
       </ion-item>
     </ion-list>
     <div class="ion-text-center ion-padding-top">
-      <ion-button type="submit" shape="round" routerLink="/" [disabled]="!f.form.valid || loading">新規登録</ion-button>
+      <ion-button class="fixed-width" type="submit" shape="round" [disabled]="!f.form.valid || loading">
+        <ion-label *ngIf="!loading">新規登録</ion-label>
+        <ion-spinner *ngIf="loading"></ion-spinner>
+      </ion-button>
     </div>
   </form>
 </ion-content>
