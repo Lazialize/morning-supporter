@@ -45,7 +45,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('ngOnInit');
-    this.weather.initializeWeatherInfo();
+    this.weather.initialize();
     this.notification.initialize();
 
     this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());

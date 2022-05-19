@@ -20,8 +20,8 @@ export class WeatherService {
     return this.subject.asObservable();
   }
 
-  public initializeWeatherInfo(): void {
-    this.subject = new Subject<WeatherInfo>();
+  public initialize(): void {
+    this.subject.next(null);
   }
 
   public updateWeatherInformation(lat: number, lon: number, limit: number = 1): void {
