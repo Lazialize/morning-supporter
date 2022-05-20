@@ -10,4 +10,10 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <ion-list>
+    <ion-item *ngFor="let task of (tasks$ | async)?.temporaryTasks; trackBy: trackByFn" [button]="true">
+      <ion-label>{{ task.name }}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

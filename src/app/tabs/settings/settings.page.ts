@@ -1,6 +1,7 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { IonDatetime, IonPopover, ModalController, PopoverController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
@@ -40,6 +41,9 @@ export class SettingsPage implements OnInit {
     this.modalController
       .create({
         component: TemporaryTaskPage,
+        componentProps: {
+          tasks$: this.userSettings$,
+        },
       })
       .then((modal) => modal.present());
   }
