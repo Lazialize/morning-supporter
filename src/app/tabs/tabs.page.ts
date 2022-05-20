@@ -6,7 +6,6 @@ import { AuthService } from '../shared/services/auth/auth.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
 import { TaskService } from '../shared/services/task/task.service';
 import { UserSettingService } from '../shared/services/user-setting/user-setting.service';
-import { WeatherInfo } from '../shared/services/weather/types';
 import { WeatherService } from '../shared/services/weather/weather.service';
 
 @Component({
