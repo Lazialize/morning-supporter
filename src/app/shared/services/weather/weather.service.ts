@@ -16,7 +16,7 @@ export class WeatherService {
     this.subject = new Subject<WeatherInfo>();
   }
 
-  public getWeatherInfo(): Observable<WeatherInfo> {
+  public getObserver(): Observable<WeatherInfo> {
     return this.subject.asObservable();
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { IUserSetting } from 'src/app/shared/services/firestore/types';
+import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
+import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
 
 const defaultSettings = (): IUserSetting => ({
   location: {
@@ -35,7 +35,7 @@ export class SignupPage implements OnInit {
     password: null,
   };
 
-  constructor(public auth: AuthService, private firestore: FirestoreService) {}
+  constructor(public auth: AuthService, private userSetting: UserSettingService) {}
 
   ngOnInit() {}
 
@@ -44,7 +44,7 @@ export class SignupPage implements OnInit {
     this.auth
       .authSignUp(this.login)
       .then(() => {
-        this.firestore.setUserSettings(this.auth.getUserId(), defaultSettings());
+        this.userSetting.setUserSettings(defaultSettings());
       })
       .finally(() => (this.loading = false));
   }
