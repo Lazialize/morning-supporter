@@ -26,8 +26,6 @@ export class HomePage implements OnInit, OnDestroy {
   total: number;
   uncompletedTasks: ITaskWithId[];
 
-  private userSettingSubscription: Subscription;
-  private notificationSubscription: Subscription;
   private progressSubscription: Subscription;
 
   constructor(
@@ -38,8 +36,6 @@ export class HomePage implements OnInit, OnDestroy {
     private taskSrv: TaskService,
     private userSetting: UserSettingService,
   ) {
-    this.userSettingSubscription = null;
-    this.notificationSubscription = null;
     this.progressSubscription = null;
   }
 
@@ -49,58 +45,6 @@ export class HomePage implements OnInit, OnDestroy {
     this.weatherInfo$ = this.weather.getObserver();
     this.tasks$ = this.taskSrv.getObserver();
     this.notifications$ = this.notification.getObserver();
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.weather.updateWeatherInformation(position.coords.latitude, position.coords.longitude);
-      },
-      () => {
-        this.userSettingSubscription = this.userSettings$.subscribe((settings) => {
-          if (settings.location.lat === null || settings.location.lon === null || settings.location.name === null) {
-            this.modalController
-              .create({
-                component: GeolocationPage,
-              })
-              .then((modal) => modal.present());
-          } else {
-            this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
-          }
-        });
-      },
-      {
-        timeout: 1000,
-      },
-    );
-
-    this.userSettings$.subscribe((settings) => {
-      if (settings.attendanceTime !== null) {
-        const attendanceMinute = settings.attendanceTime % 100;
-        const attendanceHour = Math.floor(settings.attendanceTime / 100);
-
-        const minute = attendanceMinute >= 30 ? attendanceMinute - 30 : 60 - (30 - attendanceMinute);
-        const hour = attendanceMinute - 30 === minute ? attendanceHour : attendanceHour - 1;
-
-        LocalNotifications.requestPermissions();
-        LocalNotifications.cancel({
-          notifications: [{ id: 1 }],
-        });
-        LocalNotifications.schedule({
-          notifications: [
-            {
-              id: 1,
-              title: '出勤時間30分前',
-              body: '朝のタスクは完了しましたか？',
-              schedule: {
-                on: {
-                  hour,
-                  minute,
-                },
-              },
-            },
-          ],
-        });
-      }
-    });
 
     this.progressSubscription = this.tasks$.subscribe((tasks) => {
       this.done = 0;
@@ -118,9 +62,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroyed');
-    this.userSettingSubscription.unsubscribe();
-    this.notificationSubscription.unsubscribe();
     this.progressSubscription.unsubscribe();
   }
 
