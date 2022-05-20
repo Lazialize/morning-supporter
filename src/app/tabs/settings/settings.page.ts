@@ -5,6 +5,7 @@ import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.pa
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
 import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
+import { TemporaryTaskPage } from './temporary-task/temporary-task.page';
 
 @Component({
   selector: 'app-settings',
@@ -31,6 +32,14 @@ export class SettingsPage implements OnInit {
     this.modalController
       .create({
         component: GeolocationPage,
+      })
+      .then((modal) => modal.present());
+  }
+
+  openTemporaryTaskModal() {
+    this.modalController
+      .create({
+        component: TemporaryTaskPage,
       })
       .then((modal) => modal.present());
   }

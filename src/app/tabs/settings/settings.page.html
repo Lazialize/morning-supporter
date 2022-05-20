@@ -39,7 +39,9 @@
         <ion-select-option value="120">2時間前</ion-select-option>
       </ion-select>
     </ion-item>
-
+    <ion-item lines="full" [button]="true" (click)="openTemporaryTaskModal()">
+      <ion-label>一時タスクの設定</ion-label>
+    </ion-item>
     <ion-item lines="full" [button]="true" (click)="signOut()">
       <ion-label>ログアウト</ion-label>
     </ion-item>

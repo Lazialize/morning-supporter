@@ -7,9 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
+import { TemporaryTaskPage } from './temporary-task/temporary-task.page';
 
 @NgModule({
+  entryComponents: [TemporaryTaskPage],
   imports: [CommonModule, FormsModule, IonicModule, SettingsPageRoutingModule],
-  declarations: [SettingsPage],
+  declarations: [SettingsPage, TemporaryTaskPage],
 })
 export class SettingsPageModule {}
