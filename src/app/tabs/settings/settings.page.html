@@ -6,14 +6,14 @@
 
 <ion-content>
   <ion-list>
-    <ion-item>
+    <ion-item lines="full">
       <ion-label>位置情報の設定</ion-label>
       <ion-label slot="end" color="medium">{{ (userSettings$ | async)?.location.name }}</ion-label>
       <ion-button fill="clear" slot="end" (click)="openModal()">
         <ion-icon name="search-outline"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-label>出勤時間(家を出る時間)の設定</ion-label>
       <ion-label slot="end" color="medium">{{ getTimeText((userSettings$ | async)?.attendanceTime) }}</ion-label>
       <ion-button fill="clear" id="open-timepicker" slot="end">
@@ -39,7 +39,8 @@
         <ion-select-option value="120">2時間前</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item [button]="true" (click)="signOut()">
+
+    <ion-item lines="full" [button]="true" (click)="signOut()">
       <ion-label>ログアウト</ion-label>
     </ion-item>
   </ion-list>
