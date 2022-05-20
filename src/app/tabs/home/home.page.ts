@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { ITaskWithId, IUserSetting } from 'src/app/shared/services/firestore/types';
 import { WeatherInfo } from 'src/app/shared/services/weather/types';
 import { WeatherService } from 'src/app/shared/services/weather/weather.service';
-import INotification from './services/notification/interfaces/notification';
-import { NotificationService } from './services/notification/notification.service';
+import INotification from '../../shared/services/notification/interfaces/notification';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { TaskService } from 'src/app/shared/services/task/task.service';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
+import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
+import { ITaskWithId } from 'src/app/shared/services/task/Interfaces/task';
+import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
 
 @Component({
   selector: 'app-home',
@@ -31,12 +31,12 @@ export class HomePage implements OnInit, OnDestroy {
   private progressSubscription: Subscription;
 
   constructor(
-    private auth: AuthService,
     private weather: WeatherService,
     private notification: NotificationService,
-    private firestore: FirestoreService,
     private toastController: ToastController,
     private modalController: ModalController,
+    private taskSrv: TaskService,
+    private userSetting: UserSettingService,
   ) {
     this.userSettingSubscription = null;
     this.notificationSubscription = null;
@@ -45,13 +45,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('ngOnInit');
-    this.weather.initialize();
-    this.notification.initialize();
-
-    this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
-    this.weatherInfo$ = this.weather.getWeatherInfo();
-    this.tasks$ = this.firestore.fetchAllTask();
-    this.notifications$ = this.notification.getNotifications();
+    this.userSettings$ = this.userSetting.getObserver();
+    this.weatherInfo$ = this.weather.getObserver();
+    this.tasks$ = this.taskSrv.getObserver();
+    this.notifications$ = this.notification.getObserver();
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -105,45 +102,6 @@ export class HomePage implements OnInit, OnDestroy {
       }
     });
 
-    this.notificationSubscription = this.weatherInfo$.subscribe((weatherInfo) => {
-      console.log(weatherInfo);
-      this.notification.initialize();
-      if (this.notification.addCurrentNotification(weatherInfo.current.weather[0].id)) {
-        this.firestore
-          .fetchTempTaskByName(this.auth.getUserId(), '傘を持っていく')
-          .pipe(first())
-          .forEach((tasks) => {
-            if (tasks.length > 0) {
-              return;
-            }
-            this.firestore.addTask({
-              name: '傘を持っていく',
-              uid: this.auth.getUserId(),
-              timestamp: Date.now(),
-              isDone: false,
-              isTemporary: true,
-            });
-          });
-        return;
-      } else if (this.notification.addFutureNotification(weatherInfo.daily[0].weather[0].id)) {
-        this.firestore
-          .fetchTempTaskByName(this.auth.getUserId(), '傘を鞄に入れる')
-          .pipe(first())
-          .forEach((tasks) => {
-            if (tasks.length > 0) {
-              return;
-            }
-            this.firestore.addTask({
-              name: '傘を鞄に入れる',
-              uid: this.auth.getUserId(),
-              timestamp: Date.now(),
-              isDone: false,
-              isTemporary: true,
-            });
-          });
-      }
-    });
-
     this.progressSubscription = this.tasks$.subscribe((tasks) => {
       this.done = 0;
       this.total = 0;
@@ -167,18 +125,20 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   onTaskClicked(task: ITaskWithId) {
-    this.firestore.updateTask(task.id, { isDone: true }).then(async () => {
-      const toast = await this.toastController.create({
-        message: `${task.name}を完了しました。`,
-        duration: 3000,
-        buttons: [
-          {
-            text: '元に戻す',
-            handler: () => this.firestore.updateTask(task.id, { isDone: false }),
-          },
-        ],
-      });
-      toast.present();
+    this.taskSrv.updateTask(task.id, { isDone: true }).then(() => {
+      this.toastController
+        .create({
+          message: `${task.name}を完了しました。`,
+          duration: 2000,
+          position: 'top',
+          buttons: [
+            {
+              text: '元に戻す',
+              handler: () => this.taskSrv.updateTask(task.id, { isDone: false }),
+            },
+          ],
+        })
+        .then((toast) => toast.present());
     });
   }
 

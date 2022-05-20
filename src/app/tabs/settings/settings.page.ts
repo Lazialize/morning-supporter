@@ -3,8 +3,8 @@ import { IonDatetime, IonPopover, ModalController, PopoverController } from '@io
 import { Observable } from 'rxjs';
 import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { IUserSetting } from 'src/app/shared/services/firestore/types';
+import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
+import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,11 +20,11 @@ export class SettingsPage implements OnInit {
   constructor(
     private auth: AuthService,
     private modalController: ModalController,
-    private firestore: FirestoreService,
+    private userSetting: UserSettingService,
   ) {}
 
   ngOnInit() {
-    this.userSettings$ = this.firestore.getUserSettingsById(this.auth.getUserId());
+    this.userSettings$ = this.userSetting.getObserver();
   }
 
   async openModal() {
@@ -45,7 +45,7 @@ export class SettingsPage implements OnInit {
       .confirm()
       .then(() => {
         const date = new Date(this.datetime.get(0).value);
-        this.firestore.updateUserSettings(this.auth.getUserId(), {
+        this.userSetting.updateUserSettings({
           attendanceTime: date.getHours() * 100 + date.getMinutes(),
         });
       });

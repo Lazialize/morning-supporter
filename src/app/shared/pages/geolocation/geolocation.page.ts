@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
-import { FirestoreService } from '../../services/firestore/firestore.service';
 import { GeocodingService } from '../../services/geocoding/geocoding.service';
 import { GeolocationInfo } from '../../services/geocoding/types';
+import { UserSettingService } from '../../services/user-setting/user-setting.service';
 
 @Component({
   selector: 'app-geolocation',
@@ -18,8 +18,8 @@ export class GeolocationPage implements OnInit {
   constructor(
     private modalController: ModalController,
     private geocoding: GeocodingService,
-    private firestore: FirestoreService,
     private auth: AuthService,
+    private userSetting: UserSettingService,
   ) {}
 
   ngOnInit() {
@@ -40,7 +40,7 @@ export class GeolocationPage implements OnInit {
   onClick(lat: string, lon: string, name: string) {
     // this.localStorageService.save(LocalStorageKey.location, { lat, lon, name });
     console.log({ name, lat, lon });
-    this.firestore.updateUserSettings(this.auth.getUserId(), {
+    this.userSetting.updateUserSettings({
       location: {
         name,
         lat,

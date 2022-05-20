@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ActionSheetController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { ITaskWithId } from 'src/app/shared/services/firestore/types';
+import { ITaskWithId } from 'src/app/shared/services/task/Interfaces/task';
+import { TaskService } from 'src/app/shared/services/task/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -15,13 +14,12 @@ export class TaskListPage implements OnInit {
   constructor(
     private alert: AlertController,
     private actionSheet: ActionSheetController,
-    private firestore: FirestoreService,
-    private auth: AuthService,
     private toast: ToastController,
+    private taskSrv: TaskService,
   ) {}
 
   ngOnInit() {
-    this.tasks$ = this.firestore.fetchAllTask();
+    this.tasks$ = this.taskSrv.getObserver();
   }
 
   async openAlertToCreateTask() {
@@ -40,15 +38,7 @@ export class TaskListPage implements OnInit {
         {
           text: '作成',
           handler: (data: { name: string }) => {
-            this.firestore
-              .addTask({
-                uid: this.auth.getUserId(),
-                name: data.name,
-                timestamp: Date.now(),
-                isDone: false,
-                isTemporary: false,
-              })
-              .then(() => this.popToast(`${data.name}を追加しました。`));
+            this.taskSrv.addTask(data).then(() => this.popToast(`${data.name}を追加しました。`));
           },
         },
       ],
@@ -89,8 +79,9 @@ export class TaskListPage implements OnInit {
                 {
                   text: '変更',
                   handler: (data: { name: string }) => {
-                    this.firestore.updateTask(task.id, data);
-                    this.popToast(`${task.name}の名称を${data.name}に変更しました。`);
+                    this.taskSrv.updateTask(task.id, data).then(() => {
+                      this.popToast(`${task.name}の名称を${data.name}に変更しました。`);
+                    });
                   },
                 },
               ],
@@ -102,8 +93,9 @@ export class TaskListPage implements OnInit {
         {
           text: '削除',
           handler: () => {
-            this.firestore.deleteTask(task.id);
-            this.popToast(`${task.name}を削除しました。`);
+            this.taskSrv.deleteTask(task.id).then(() => {
+              this.popToast(`${task.name}を削除しました。`);
+            });
           },
           role: 'destructive',
           icon: 'trash',
@@ -117,7 +109,7 @@ export class TaskListPage implements OnInit {
         {
           text: '未完了に戻す',
           icon: 'arrow-undo-outline',
-          handler: () => this.firestore.updateTask(task.id, { isDone: false }),
+          handler: () => this.taskSrv.updateTask(task.id, { isDone: false }),
         },
         ...actionSheet.buttons,
       ];
