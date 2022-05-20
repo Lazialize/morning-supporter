@@ -39,6 +39,12 @@ export class SettingsPage implements OnInit {
     this.auth.authSignOut();
   }
 
+  notificationTimeChanged(event) {
+    this.userSetting.updateUserSettings({
+      notificationTime: Number(event.detail.value),
+    });
+  }
+
   confirm() {
     this.datetime
       .get(0)
@@ -54,5 +60,9 @@ export class SettingsPage implements OnInit {
 
   close() {
     this.popover.get(0).dismiss();
+  }
+
+  getTimeText(time: number) {
+    return `${Math.floor(time / 100)}:${time % 100}`;
   }
 }

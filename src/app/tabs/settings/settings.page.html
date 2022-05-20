@@ -15,6 +15,7 @@
     </ion-item>
     <ion-item>
       <ion-label>出勤時間(家を出る時間)の設定</ion-label>
+      <ion-label slot="end" color="medium">{{ getTimeText((userSettings$ | async)?.attendanceTime) }}</ion-label>
       <ion-button fill="clear" id="open-timepicker" slot="end">
         <ion-icon name="calendar-outline"></ion-icon>
       </ion-button>
@@ -28,6 +29,15 @@
           </ion-datetime>
         </ng-template>
       </ion-popover>
+    </ion-item>
+    <ion-item>
+      <ion-label>出勤前通知の時間設定</ion-label>
+      <ion-select value="{{ (userSettings$ | async)?.notificationTime }}" (ionChange)="notificationTimeChanged($event)">
+        <ion-select-option value="30">30分前</ion-select-option>
+        <ion-select-option value="60">1時間前</ion-select-option>
+        <ion-select-option value="90">1時間30分前</ion-select-option>
+        <ion-select-option value="120">2時間前</ion-select-option>
+      </ion-select>
     </ion-item>
     <ion-item [button]="true" (click)="signOut()">
       <ion-label>ログアウト</ion-label>
