@@ -11,6 +11,7 @@
       [button]="true"
       (click)="openActionSheetOfTask(task)"
     >
+      <ion-icon slot="start" name="{{ task.isDone ? 'checkmark-circle-outline' : 'ellipse-outline' }}"></ion-icon>
       <ion-label>{{ task.name }}</ion-label>
     </ion-item>
   </ion-list>
