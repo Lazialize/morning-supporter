@@ -8,7 +8,7 @@
   <ion-list>
     <ion-item lines="full">
       <ion-label>位置情報の設定</ion-label>
-      <ion-label slot="end" color="medium">{{ (userSettings$ | async)?.location.name }}</ion-label>
+      <ion-label slot="end" color="medium">{{ (userSettings$ | async)?.location.name.split(', ')[0] }}</ion-label>
       <ion-button fill="clear" slot="end" (click)="openModal()">
         <ion-icon name="search-outline"></ion-icon>
       </ion-button>
