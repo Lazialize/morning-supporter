@@ -60,7 +60,7 @@ export class TabsPage implements OnInit, OnDestroy {
       },
     );
 
-    this.subscriptionWeatherUpdated = this.weather.getObserver().subscribe((weatherInfo) => {
+    this.subscriptionWeatherUpdated = this.weather.getObserver().subscribe(async (weatherInfo) => {
       this.notification.initialize();
 
       const currentWeatherId = Math.floor(weatherInfo.current.weather[0].id / 100);
@@ -75,6 +75,7 @@ export class TabsPage implements OnInit, OnDestroy {
       }
 
       this.temporaryTaskProcess(currentWeatherId);
+      await new Promise((resolve) => setTimeout(resolve, 100));
       this.temporaryTaskProcess(futureWeatherId, true);
     });
 
@@ -165,7 +166,7 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   private temporaryTaskProcess(weatherId: number, isFuture = false) {
-    this.userSetting
+    return this.userSetting
       .getObserver()
       .pipe(first())
       .forEach(async (userSetting) => {
