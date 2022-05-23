@@ -6,13 +6,29 @@
 
 <ion-content>
   <ion-list>
-    <ion-item
+    <!-- <ion-item
       *ngFor="let task of tasks$ | async; trackBy: trackByFn"
       [button]="true"
       (click)="openActionSheetOfTask(task)"
     >
+      <ion-checkbox slot="start"></ion-checkbox>
       <ion-icon slot="start" name="{{ task.isDone ? 'checkmark-circle-outline' : 'ellipse-outline' }}"></ion-icon>
       <ion-label>{{ task.name }}</ion-label>
-    </ion-item>
+    </ion-item> -->
+
+    <ion-item-sliding *ngFor="let task of tasks$ | async; trackBy: trackByFn">
+      <ion-item>
+        <ion-checkbox slot="start" (ionChange)="checkBoxChanged(task)"></ion-checkbox>
+        <ion-label>{{ task.name }}</ion-label>
+      </ion-item>
+      <ion-item-options *ngIf="!task.isTemporary" side="end">
+        <ion-item-option (click)="editTask(task)">
+          <ion-icon name="pencil-outline" size="large"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="deleteTask(task)">
+          <ion-icon name="trash-outline" size="large"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 </ion-content>

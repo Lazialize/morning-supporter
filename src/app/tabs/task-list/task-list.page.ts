@@ -22,76 +22,43 @@ export class TaskListPage implements OnInit {
     this.tasks$ = this.taskSrv.getObserver();
   }
 
-  async openActionSheetOfTask(task: ITaskWithId) {
-    const actionSheet = await this.actionSheet.create({
-      header: task.name,
+  async editTask(task: ITaskWithId) {
+    const alert = await this.alert.create({
+      header: '名称の変更',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: '日課の名称',
+          value: task.name,
+        },
+      ],
       buttons: [
         {
           text: '閉じる',
-          role: 'cancel',
-          icon: 'close',
+        },
+        {
+          text: '変更',
+          handler: (data: { name: string }) => {
+            this.taskSrv.updateTask(task.id, data).then(() => {
+              this.popToast(`「${task.name}」の名称を「${data.name}」に変更しました。`);
+            });
+          },
         },
       ],
     });
+    alert.present();
+  }
 
-    if (!task.isTemporary) {
-      actionSheet.buttons = [
-        {
-          text: '名称変更',
-          handler: async () => {
-            const alert = await this.alert.create({
-              header: '名称の変更',
-              inputs: [
-                {
-                  name: 'name',
-                  placeholder: '日課の名称',
-                  value: task.name,
-                },
-              ],
-              buttons: [
-                {
-                  text: '閉じる',
-                },
-                {
-                  text: '変更',
-                  handler: (data: { name: string }) => {
-                    this.taskSrv.updateTask(task.id, data).then(() => {
-                      this.popToast(`「${task.name}」の名称を「${data.name}」に変更しました。`);
-                    });
-                  },
-                },
-              ],
-            });
-            alert.present();
-          },
-          icon: 'pencil',
-        },
-        {
-          text: '削除',
-          handler: () => {
-            this.taskSrv.deleteTask(task.id).then(() => {
-              this.popToast(`「${task.name}」を削除しました。`);
-            });
-          },
-          role: 'destructive',
-          icon: 'trash',
-        },
-        ...actionSheet.buttons,
-      ];
-    }
+  async deleteTask(task: ITaskWithId) {
+    this.taskSrv.deleteTask(task.id).then(() => {
+      this.popToast(`「${task.name}」を削除しました。`);
+    });
+  }
 
-    actionSheet.buttons = [
-      {
-        text: task.isDone ? '未完了に戻す' : '完了する',
-        icon: task.isDone ? 'arrow-undo-outline' : 'checkmark-outline',
-        handler: () =>
-          this.taskSrv.updateTask(task.id, { isDone: !task.isDone }).then(() => {
-            this.popToast(`「${task.name}」を${task.isDone ? '未完了' : '完了'}にしました。`);
-          }),
-      },
-      ...actionSheet.buttons,
-    ];
-    actionSheet.present();
+  async checkBoxChanged(task: ITaskWithId) {
+    this.taskSrv.updateTask(task.id, { isDone: !task.isDone }).then(() => {
+      this.popToast(`「${task.name}」を${task.isDone ? '未完了' : '完了'}にしました。`);
+    });
   }
 
   trackByFn(index, item: ITaskWithId) {
