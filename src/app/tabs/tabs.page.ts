@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import notifications from '../shared/constants/notifications';
@@ -28,6 +28,8 @@ export class TabsPage implements OnInit, OnDestroy {
     private notification: NotificationService,
     private userSetting: UserSettingService,
     private modalController: ModalController,
+    private alert: AlertController,
+    private toast: ToastController,
   ) {}
 
   ngOnInit(): void {
@@ -126,6 +128,40 @@ export class TabsPage implements OnInit, OnDestroy {
     this.subscriptionWeatherUpdated.unsubscribe();
     this.subscriptionSettingsUpdated.unsubscribe();
     this.subscriptionWeatherSettingsUpdated.unsubscribe();
+  }
+
+  async openAlertToCreateTask() {
+    const alert = await this.alert.create({
+      header: '日課の作成',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: '日課の名称',
+        },
+      ],
+      buttons: [
+        {
+          text: '閉じる',
+        },
+        {
+          text: '作成',
+          handler: (data: { name: string }) => {
+            this.task.addTask(data).then(() => this.popToast(`${data.name}を追加しました。`));
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
+  private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'bottom') {
+    this.toast
+      .create({
+        message,
+        duration,
+        position,
+      })
+      .then((toast) => toast.present());
   }
 
   private temporaryTaskProcess(weatherId: number, isFuture = false) {

@@ -22,30 +22,6 @@ export class TaskListPage implements OnInit {
     this.tasks$ = this.taskSrv.getObserver();
   }
 
-  async openAlertToCreateTask() {
-    const alert = await this.alert.create({
-      header: '日課の作成',
-      inputs: [
-        {
-          name: 'name',
-          placeholder: '日課の名称',
-        },
-      ],
-      buttons: [
-        {
-          text: '閉じる',
-        },
-        {
-          text: '作成',
-          handler: (data: { name: string }) => {
-            this.taskSrv.addTask(data).then(() => this.popToast(`${data.name}を追加しました。`));
-          },
-        },
-      ],
-    });
-    alert.present();
-  }
-
   async openActionSheetOfTask(task: ITaskWithId) {
     const actionSheet = await this.actionSheet.create({
       header: task.name,
