@@ -104,16 +104,14 @@ export class TaskListPage implements OnInit {
       ];
     }
 
-    if (task.isDone) {
-      actionSheet.buttons = [
-        {
-          text: '未完了に戻す',
-          icon: 'arrow-undo-outline',
-          handler: () => this.taskSrv.updateTask(task.id, { isDone: false }),
-        },
-        ...actionSheet.buttons,
-      ];
-    }
+    actionSheet.buttons = [
+      {
+        text: task.isDone ? '未完了に戻す' : '完了する',
+        icon: task.isDone ? 'arrow-undo-outline' : 'checkmark-outline',
+        handler: () => this.taskSrv.updateTask(task.id, { isDone: !task.isDone }),
+      },
+      ...actionSheet.buttons,
+    ];
     actionSheet.present();
   }
 
