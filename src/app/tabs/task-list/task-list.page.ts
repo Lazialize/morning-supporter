@@ -56,7 +56,7 @@ export class TaskListPage implements OnInit {
                   text: '変更',
                   handler: (data: { name: string }) => {
                     this.taskSrv.updateTask(task.id, data).then(() => {
-                      this.popToast(`${task.name}の名称を${data.name}に変更しました。`);
+                      this.popToast(`「${task.name}」の名称を「${data.name}」に変更しました。`);
                     });
                   },
                 },
@@ -70,7 +70,7 @@ export class TaskListPage implements OnInit {
           text: '削除',
           handler: () => {
             this.taskSrv.deleteTask(task.id).then(() => {
-              this.popToast(`${task.name}を削除しました。`);
+              this.popToast(`「${task.name}」を削除しました。`);
             });
           },
           role: 'destructive',
@@ -84,7 +84,10 @@ export class TaskListPage implements OnInit {
       {
         text: task.isDone ? '未完了に戻す' : '完了する',
         icon: task.isDone ? 'arrow-undo-outline' : 'checkmark-outline',
-        handler: () => this.taskSrv.updateTask(task.id, { isDone: !task.isDone }),
+        handler: () =>
+          this.taskSrv.updateTask(task.id, { isDone: !task.isDone }).then(() => {
+            this.popToast(`「${task.name}」を${task.isDone ? '未完了' : '完了'}にしました。`);
+          }),
       },
       ...actionSheet.buttons,
     ];
@@ -95,7 +98,7 @@ export class TaskListPage implements OnInit {
     return item.id;
   }
 
-  private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'bottom') {
+  private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'top') {
     this.toast
       .create({
         message,

@@ -147,7 +147,7 @@ export class TabsPage implements OnInit, OnDestroy {
         {
           text: '作成',
           handler: (data: { name: string }) => {
-            this.task.addTask(data).then(() => this.popToast(`${data.name}を追加しました。`));
+            this.task.addTask(data).then(() => this.popToast(`「${data.name}」を追加しました。`));
           },
         },
       ],
@@ -155,7 +155,7 @@ export class TabsPage implements OnInit, OnDestroy {
     alert.present();
   }
 
-  private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'bottom') {
+  private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'top') {
     this.toast
       .create({
         message,
