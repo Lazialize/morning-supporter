@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { debounceTime, first } from 'rxjs/operators';
 import notifications from '../shared/constants/notifications';
 import { GeolocationPage } from '../shared/pages/geolocation/geolocation.page';
 import { AuthService } from '../shared/services/auth/auth.service';
@@ -43,24 +43,28 @@ export class TabsPage implements OnInit, OnDestroy {
         this.weather.updateWeatherInformation(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        this.subscriptionWeatherSettingsUpdated = this.userSetting.getObserver().subscribe((settings) => {
-          if (settings.location.lat === null || settings.location.lon === null || settings.location.name === null) {
-            this.modalController
-              .create({
-                component: GeolocationPage,
-              })
-              .then((modal) => modal.present());
-          } else {
-            this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
-          }
-        });
+        this.subscriptionWeatherSettingsUpdated = this.userSetting
+          .getObserver()
+          .pipe(debounceTime(500))
+          .subscribe((settings) => {
+            if (settings.location.lat === null || settings.location.lon === null || settings.location.name === null) {
+              this.modalController
+                .create({
+                  component: GeolocationPage,
+                })
+                .then((modal) => modal.present());
+            } else {
+              this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
+            }
+          });
       },
       {
         timeout: 1000,
       },
     );
 
-    this.subscriptionWeatherUpdated = this.weather.getObserver().subscribe(async (weatherInfo) => {
+    this.subscriptionWeatherUpdated = this.weather.getObserver().subscribe((weatherInfo) => {
+      console.log(weatherInfo);
       this.notification.initialize();
 
       const currentWeatherId = Math.floor(weatherInfo.current.weather[0].id / 100);
@@ -74,9 +78,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.notification.addNotification(futureNotification);
       }
 
-      this.temporaryTaskProcess(currentWeatherId);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      this.temporaryTaskProcess(futureWeatherId, true);
+      this.temporaryTaskProcess(currentWeatherId, futureWeatherId);
     });
 
     this.subscriptionSettingsUpdated = this.userSetting.getObserver().subscribe((settings) => {
@@ -165,7 +167,7 @@ export class TabsPage implements OnInit, OnDestroy {
       .then((toast) => toast.present());
   }
 
-  private temporaryTaskProcess(weatherId: number, isFuture = false) {
+  private temporaryTaskProcess(currentWeatherId: number, futureWeatherId: number) {
     return this.userSetting
       .getObserver()
       .pipe(first())
@@ -175,17 +177,19 @@ export class TabsPage implements OnInit, OnDestroy {
         }
 
         for (const taskSetting of userSetting.temporaryTasks) {
-          if (!taskSetting.conditions.includes(weatherId)) {
-            continue;
-          }
-          if (!taskSetting.tense.includes(Number(isFuture))) {
-            continue;
-          }
-          if (await this.task.isTemporaryTaskExists(taskSetting.name)) {
-            continue;
-          }
+          if (taskSetting.conditions.includes(currentWeatherId) && taskSetting.tense.includes(0)) {
+            if (await this.task.isTemporaryTaskExists(taskSetting.name)) {
+              continue;
+            }
 
-          this.task.addTask({ name: taskSetting.name }, true);
+            this.task.addTask({ name: taskSetting.name }, true);
+          } else if (taskSetting.conditions.includes(futureWeatherId) && taskSetting.tense.includes(1)) {
+            if (await this.task.isTemporaryTaskExists(taskSetting.name)) {
+              continue;
+            }
+
+            this.task.addTask({ name: taskSetting.name }, true);
+          }
         }
       });
   }
