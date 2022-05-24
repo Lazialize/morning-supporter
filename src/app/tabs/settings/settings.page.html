@@ -6,20 +6,17 @@
 
 <ion-content>
   <ion-list>
-    <ion-item lines="full">
+    <ion-item lines="full" [button]="true" (click)="openModal()">
       <ion-label>気象情報取得位置の設定</ion-label>
       <ion-label slot="end" color="medium">{{ (userSettings$ | async)?.location.name }}</ion-label>
-      <ion-button fill="clear" slot="end" (click)="openModal()">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-button>
     </ion-item>
-    <ion-item lines="full">
+    <ion-item lines="full" [button]="true" id="open-timepicker">
       <ion-label>出勤時間(家を出る時間)の設定</ion-label>
       <ion-label slot="end" color="medium">{{ getTimeText((userSettings$ | async)?.attendanceTime) }}</ion-label>
-      <ion-button fill="clear" id="open-timepicker" slot="end">
+      <!-- <ion-button fill="clear" id="open-timepicker" slot="end">
         <ion-icon name="calendar-outline"></ion-icon>
-      </ion-button>
-      <ion-popover trigger="open-timepicker">
+      </ion-button> -->
+      <ion-popover trigger="open-timepicker" side="right">
         <ng-template>
           <ion-datetime presentation="time" value="2012-12-15T09:00:00+09:00">
             <ion-buttons slot="buttons">
