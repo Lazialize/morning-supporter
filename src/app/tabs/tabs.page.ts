@@ -149,6 +149,10 @@ export class TabsPage implements OnInit, OnDestroy {
         {
           text: '作成',
           handler: (data: { name: string }) => {
+            if (!data.name.length) {
+              this.popToast('日課名は1文字以上である必要があります。');
+              return;
+            }
             this.task.addTask(data).then(() => this.popToast(`「${data.name}」を追加しました。`));
           },
         },
