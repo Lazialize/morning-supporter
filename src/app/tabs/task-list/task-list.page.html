@@ -18,7 +18,7 @@
 
     <ion-item-sliding *ngFor="let task of tasks$ | async; trackBy: trackByFn">
       <ion-item>
-        <ion-checkbox slot="start" (ionChange)="checkBoxChanged(task)"></ion-checkbox>
+        <ion-checkbox slot="start" checked="{{ task.isDone }}" (ionChange)="checkBoxChanged(task)"></ion-checkbox>
         <ion-label>{{ task.name }}</ion-label>
       </ion-item>
       <ion-item-options *ngIf="!task.isTemporary" side="end">
