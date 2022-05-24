@@ -16,13 +16,13 @@
       <ion-label>{{ task.name }}</ion-label>
     </ion-item> -->
 
-    <ion-item-sliding *ngFor="let task of tasks$ | async; trackBy: trackByFn">
+    <ion-item-sliding *ngFor="let task of tasks$ | async; trackBy: trackByFn; index as i">
       <ion-item>
         <ion-checkbox slot="start" checked="{{ task.isDone }}" (click)="checkBoxChanged(task)"></ion-checkbox>
         <ion-label>{{ task.name }}</ion-label>
       </ion-item>
       <ion-item-options *ngIf="!task.isTemporary" side="end">
-        <ion-item-option (click)="editTask(task)">
+        <ion-item-option (click)="editTask(task, i)">
           <ion-icon name="pencil-outline" size="large"></ion-icon>
         </ion-item-option>
         <ion-item-option color="danger" (click)="deleteTask(task)">

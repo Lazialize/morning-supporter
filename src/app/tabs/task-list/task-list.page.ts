@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertController, ActionSheetController, ToastController } from '@ionic/angular';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AlertController, ActionSheetController, ToastController, IonItemSliding } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { ITaskWithId } from 'src/app/shared/services/task/Interfaces/task';
 import { TaskService } from 'src/app/shared/services/task/task.service';
@@ -10,6 +10,9 @@ import { TaskService } from 'src/app/shared/services/task/task.service';
   styleUrls: ['./task-list.page.scss'],
 })
 export class TaskListPage implements OnInit {
+  @ViewChildren(IonItemSliding)
+  itemSliding: QueryList<IonItemSliding>;
+
   tasks$: Observable<ITaskWithId[]>;
   constructor(
     private alert: AlertController,
@@ -22,7 +25,7 @@ export class TaskListPage implements OnInit {
     this.tasks$ = this.taskSrv.getObserver();
   }
 
-  async editTask(task: ITaskWithId) {
+  async editTask(task: ITaskWithId, index: number) {
     const alert = await this.alert.create({
       header: '名称の変更',
       inputs: [
@@ -41,6 +44,8 @@ export class TaskListPage implements OnInit {
           handler: (data: { name: string }) => {
             this.taskSrv.updateTask(task.id, data).then(() => {
               this.popToast(`「${task.name}」の名称を「${data.name}」に変更しました。`);
+              this.itemSliding.get(index).close();
+              console.log(this.itemSliding.get(index));
             });
           },
         },
