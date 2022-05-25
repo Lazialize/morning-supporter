@@ -20,5 +20,5 @@ export interface IDayOfWeekCondition {
 
 export interface ICondition {
   conditionType: ConditionType;
-  conditions: IWeatherCondition[] | IDayOfWeekCondition;
+  conditions: IWeatherCondition | IDayOfWeekCondition;
 }

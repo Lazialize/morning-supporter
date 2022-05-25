@@ -72,6 +72,6 @@
     </ion-select>
   </ion-item>
   <div class="ion-text-center ion-padding-top">
-    <ion-button disabled="{{ !canSubmit() }}">登録</ion-button>
+    <ion-button disabled="{{ !canSubmit() }}" (click)="submit()">登録</ion-button>
   </div>
 </ion-content>

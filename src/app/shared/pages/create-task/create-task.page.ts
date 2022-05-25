@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ConditionType } from '../../services/task/Interfaces/condition';
+import { TaskService } from '../../services/task/task.service';
 
 @Component({
   selector: 'app-create-task',
@@ -35,7 +37,7 @@ export class CreateTaskPage implements OnInit {
     6: '土曜日',
   };
 
-  constructor(private modal: ModalController) {
+  constructor(private modal: ModalController, private task: TaskService) {
     this.name = null;
     this.isConditional = false;
     this.selected = null;
@@ -60,6 +62,59 @@ export class CreateTaskPage implements OnInit {
 
   getConditionKeys(obj: object) {
     return Object.keys(obj);
+  }
+
+  submit() {
+    if (!this.isConditional) {
+      this.task.addTask({ name: this.name });
+    } else if (this.selected === 'weather') {
+      this.task.addTask(
+        {
+          name: this.name,
+          temporaryCondition: {
+            conditionType: ConditionType.weather,
+            conditions: {
+              tense: this.selectedTense.map((v) => Number(v)),
+              weatherId: this.selectedWeather.map((v) => Number(v)),
+            },
+          },
+        },
+        true,
+      );
+    } else if (this.selectedDayOfWeekType === 'ordinal') {
+      this.task.addTask(
+        {
+          name: this.name,
+          temporaryCondition: {
+            conditionType: ConditionType.dayOfWeek,
+            conditions: {
+              isOrdinal: true,
+              dayOfWeeks: {
+                ordinal: Number(this.selectedOrdinal),
+                dayOfWeek: Number(this.selectedDayOfWeek),
+              },
+            },
+          },
+        },
+        true,
+      );
+    } else {
+      this.task.addTask(
+        {
+          name: this.name,
+          temporaryCondition: {
+            conditionType: ConditionType.dayOfWeek,
+            conditions: {
+              isOrdinal: false,
+              dayOfWeeks: this.selectedDayOfWeeks.map((v) => Number(v)),
+            },
+          },
+        },
+        true,
+      );
+    }
+
+    this.modal.dismiss();
   }
 
   canSubmit() {
