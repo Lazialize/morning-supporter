@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>タスク作成</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label>タスク名</ion-label>
+    <ion-input [(ngModel)]="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>条件付きタスク</ion-label>
+    <ion-checkbox [(ngModel)]="isConditional"></ion-checkbox>
+  </ion-item>
+  <ion-item *ngIf="isConditional">
+    <ion-label>条件タイプ</ion-label>
+    <ion-select [(ngModel)]="selected" (ionChange)="selectedItemChanged()">
+      <ion-select-option value="weather">気象情報</ion-select-option>
+      <ion-select-option value="dayOfWeek" s>曜日</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="selected === 'weather'">
+    <ion-label>天気</ion-label>
+    <ion-select multiple="true" [(ngModel)]="selectedWeather" (ionChange)="selectedItemChanged()">
+      <ion-select-option *ngFor="let c of getConditionKeys(weatherConditions)" value="{{ c }}">
+        {{ weatherConditions[c] }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="selected === 'weather'">
+    <ion-label>時間</ion-label>
+    <ion-select multiple="true" [(ngModel)]="selectedTense" (ionChange)="selectedItemChanged()">
+      <ion-select-option value="0">現在</ion-select-option>
+      <ion-select-option value="1">予定</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="selected === 'dayOfWeek'">
+    <ion-label> 曜日タイプ </ion-label>
+    <ion-select [(ngModel)]="selectedDayOfWeekType">
+      <ion-select-option value="ordinal">第n曜日</ion-select-option>
+      <ion-select-option value="multiple">曜日毎</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="selectedDayOfWeekType === 'multiple' && selected === 'dayOfWeek'">
+    <ion-label>曜日</ion-label>
+    <ion-select multiple="true" [(ngModel)]="selectedDayOfWeeks" (ionChange)="selectedItemChanged()">
+      <ion-select-option *ngFor="let c of getConditionKeys(dayOfWeeks)" value="{{ c }}">
+        {{ dayOfWeeks[c] }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="selectedDayOfWeekType === 'ordinal' && selected === 'dayOfWeek'">
+    <ion-label>曜日</ion-label>
+    第
+    <ion-select [(ngModel)]="selectedOrdinal" (ionChange)="selectedItemChanged()">
+      <ion-select-option value="1">1</ion-select-option>
+      <ion-select-option value="2">2</ion-select-option>
+      <ion-select-option value="3">3</ion-select-option>
+      <ion-select-option value="4">4</ion-select-option>
+      <ion-select-option value="5">5</ion-select-option>
+    </ion-select>
+    <ion-select [(ngModel)]="selectedDayOfWeek" (ionChange)="selectedItemChanged()">
+      <ion-select-option *ngFor="let c of getConditionKeys(dayOfWeeks)" value="{{ c }}">
+        {{ dayOfWeeks[c] }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <div class="ion-text-center ion-padding-top">
+    <ion-button disabled="{{ !canSubmit() }}">登録</ion-button>
+  </div>
+</ion-content>

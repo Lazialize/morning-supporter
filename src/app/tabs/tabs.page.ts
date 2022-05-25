@@ -4,6 +4,7 @@ import { ActionSheetController, AlertController, ModalController, ToastControlle
 import { Subscription } from 'rxjs';
 import { debounceTime, first } from 'rxjs/operators';
 import notifications from '../shared/constants/notifications';
+import { CreateTaskPage } from '../shared/pages/create-task/create-task.page';
 import { GeolocationPage } from '../shared/pages/geolocation/geolocation.page';
 import { AuthService } from '../shared/services/auth/auth.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
@@ -129,31 +130,10 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   async openAlertToCreateTask() {
-    const alert = await this.alert.create({
-      header: '日課の作成',
-      inputs: [
-        {
-          name: 'name',
-          placeholder: '日課の名称',
-        },
-      ],
-      buttons: [
-        {
-          text: '閉じる',
-        },
-        {
-          text: '作成',
-          handler: (data: { name: string }) => {
-            if (!data.name.length) {
-              this.popToast('日課名は1文字以上である必要があります。');
-              return;
-            }
-            this.task.addTask(data).then(() => this.popToast(`「${data.name}」を追加しました。`));
-          },
-        },
-      ],
+    const modal = await this.modalController.create({
+      component: CreateTaskPage,
     });
-    alert.present();
+    modal.present();
   }
 
   private popToast(message: string, duration: number = 2000, position: 'top' | 'bottom' | 'middle' = 'top') {
