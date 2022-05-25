@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { AlertController, NavController } from '@ionic/angular';
+import { UserSettingService } from '../user-setting/user-setting.service';
 import { firebaseError } from './firebase.error';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth, private navController: NavController, private alertController: AlertController) {}
+  constructor(
+    private auth: Auth,
+    private navController: NavController,
+    private alertController: AlertController,
+    private userSetting: UserSettingService,
+  ) {}
 
   getUserId() {
     return this.auth.currentUser.uid;
@@ -15,7 +21,10 @@ export class AuthService {
 
   authSignUp(login: { email: string; password: string }) {
     return createUserWithEmailAndPassword(this.auth, login.email, login.password)
-      .then(() => this.navController.navigateForward('/'))
+      .then(() => {
+        this.userSetting.initialize(this.getUserId());
+        this.navController.navigateForward('/slide');
+      })
       .catch((error) => {
         this.alertError(error);
         throw error;
@@ -24,7 +33,10 @@ export class AuthService {
 
   authSignIn(login: { email: string; password: string }) {
     return signInWithEmailAndPassword(this.auth, login.email, login.password)
-      .then(() => this.navController.navigateForward('/'))
+      .then(() => {
+        this.userSetting.initialize(this.getUserId());
+        this.navController.navigateForward('/');
+      })
       .catch((error) => {
         this.alertError(error);
         throw error;

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { IUserSetting } from 'src/app/shared/services/user-setting/interfaces/user-setting';
 import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
@@ -35,7 +36,7 @@ export class SignupPage implements OnInit {
     password: null,
   };
 
-  constructor(public auth: AuthService, private userSetting: UserSettingService) {}
+  constructor(public auth: AuthService, private userSetting: UserSettingService, private nav: NavController) {}
 
   ngOnInit() {}
 

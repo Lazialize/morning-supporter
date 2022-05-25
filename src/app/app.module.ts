@@ -16,6 +16,7 @@ import { AuthGuard } from '@angular/fire/auth-guard';
 import { indexedDBLocalPersistence } from 'firebase/auth';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from './shared/shared.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,12 @@ import { SharedModule } from './shared/shared.module';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => initializeAuth(getApp(), { persistence: indexedDBLocalPersistence })),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
   providers: [AuthGuard, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

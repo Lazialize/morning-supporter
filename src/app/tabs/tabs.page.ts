@@ -36,7 +36,6 @@ export class TabsPage implements OnInit, OnDestroy {
     this.weather.initialize();
     this.notification.initialize();
     this.task.initialize(this.auth.getUserId());
-    this.userSetting.initialize(this.auth.getUserId());
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -47,13 +46,9 @@ export class TabsPage implements OnInit, OnDestroy {
           .getObserver()
           .pipe(debounceTime(500))
           .subscribe((settings) => {
-            if (settings.location.lat === null || settings.location.lon === null || settings.location.name === null) {
-              this.modalController
-                .create({
-                  component: GeolocationPage,
-                })
-                .then((modal) => modal.present());
-            } else {
+            if (
+              !(settings.location.lat === null || settings.location.lon === null || settings.location.name === null)
+            ) {
               this.weather.updateWeatherInformation(+settings.location.lat, +settings.location.lon);
             }
           });

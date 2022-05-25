@@ -19,6 +19,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectLoggedIn },
   },
+  {
+    path: 'slide',
+    loadChildren: () => import('./slide/slide.module').then((m) => m.SlidePageModule),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorized },
+  },
 ];
 
 @NgModule({

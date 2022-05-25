@@ -1,0 +1,64 @@
+<ion-content>
+  <swiper [keyboard]="true" [pagination]="true" [navigation]="true">
+    <ng-template swiperSlide>
+      <div class="container">
+        <ion-card>
+          <ion-card-header>
+            <ion-icon style="font-size: 150px" name="sunny-outline"></ion-icon>
+            <ion-card-title>ようこそ</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> Morning Supporter はあなたの朝の生活を支援するタスク管理ツールです。 </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="container">
+        <ion-card>
+          <ion-card-header>
+            <ion-icon style="font-size: 150px" name="calendar-outline"></ion-icon>
+            <ion-card-title>日課の管理</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> 日課を登録し，毎朝のタスクを簡単に管理できます。 </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="container">
+        <ion-card>
+          <ion-card-header>
+            <ion-icon style="font-size: 150px" name="umbrella-outline"></ion-icon>
+            <ion-card-title>特定日課の自動追加</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> 現在地から気象情報を取得し，傘を持つなどのタスクを自動で追加します。 </ion-card-content>
+          <ion-card-content>
+            <ion-button (click)="setLocation()">位置情報を設定</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="container">
+        <ion-card>
+          <ion-card-header>
+            <ion-icon style="font-size: 150px" name="notifications-outline"></ion-icon>
+            <ion-card-title>通知</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> 家を出る時間の前に通知を送り，日課のやり忘れを防止します。 </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="container">
+        <ion-card>
+          <ion-card-header>
+            <ion-icon style="font-size: 150px" name="arrow-forward-circle-outline"></ion-icon>
+            <ion-card-title>さあ，はじめよう</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button (click)="toTabs()">はじめる</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ng-template>
+  </swiper>
+</ion-content>
