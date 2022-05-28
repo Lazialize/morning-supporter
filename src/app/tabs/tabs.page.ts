@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { debounceTime, first } from 'rxjs/operators';
 import notifications from '../shared/constants/notifications';
-import { CreateTaskPage } from '../shared/pages/create-task/create-task.page';
-import { GeolocationPage } from '../shared/pages/geolocation/geolocation.page';
+import { TaskConfigPage } from '../shared/pages/task-config/task-config.page';
 import { AuthService } from '../shared/services/auth/auth.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
+import { TaskSettingService } from '../shared/services/task-setting/task-setting.service';
 import { TaskService } from '../shared/services/task/task.service';
 import { UserSettingService } from '../shared/services/user-setting/user-setting.service';
 import { WeatherService } from '../shared/services/weather/weather.service';
@@ -25,6 +25,7 @@ export class TabsPage implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private task: TaskService,
+    private taskSettings: TaskSettingService,
     private weather: WeatherService,
     private notification: NotificationService,
     private userSetting: UserSettingService,
@@ -36,7 +37,7 @@ export class TabsPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.weather.initialize();
     this.notification.initialize();
-    this.task.initialize(this.auth.getUserId());
+    this.taskSettings.initialize();
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -131,7 +132,7 @@ export class TabsPage implements OnInit, OnDestroy {
 
   async openAlertToCreateTask() {
     const modal = await this.modalController.create({
-      component: CreateTaskPage,
+      component: TaskConfigPage,
     });
     modal.present();
   }
