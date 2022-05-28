@@ -13,7 +13,6 @@ export class TaskConfigPage implements OnInit {
   selected: string;
   selectedDayOfWeekType: string;
   selectedWeather: string[];
-  selectedTense: string[];
   selectedOrdinal: string;
   selectedDayOfWeek: string;
   selectedDayOfWeeks: string[];
@@ -42,7 +41,6 @@ export class TaskConfigPage implements OnInit {
     this.selected = null;
     this.selectedDayOfWeekType = null;
     this.selectedWeather = [];
-    this.selectedTense = [];
     this.selectedOrdinal = null;
     this.selectedDayOfWeek = null;
     this.selectedDayOfWeeks = [];
@@ -115,9 +113,7 @@ export class TaskConfigPage implements OnInit {
       if (this.selected === 'weather') {
         if (
           this.selectedWeather === null ||
-          this.selectedWeather.length < 1 ||
-          this.selectedTense === null ||
-          this.selectedTense.length < 1
+          this.selectedWeather.length < 1
         ) {
           return false;
         }

@@ -33,13 +33,6 @@
       </ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-item *ngIf="selected === 'weather'">
-    <ion-label>時間</ion-label>
-    <ion-select multiple="true" [(ngModel)]="selectedTense" (ionChange)="selectedItemChanged()">
-      <ion-select-option value="0">現在</ion-select-option>
-      <ion-select-option value="1">予定</ion-select-option>
-    </ion-select>
-  </ion-item>
   <ion-item *ngIf="selected === 'dayOfWeek'">
     <ion-label> 曜日タイプ </ion-label>
     <ion-select [(ngModel)]="selectedDayOfWeekType">
