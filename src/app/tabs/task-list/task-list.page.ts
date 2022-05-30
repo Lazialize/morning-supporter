@@ -14,12 +14,7 @@ export class TaskListPage implements OnInit {
   itemSliding: QueryList<IonItemSliding>;
 
   tasks$: Observable<ITaskWithId[]>;
-  constructor(
-    private alert: AlertController,
-    private actionSheet: ActionSheetController,
-    private toast: ToastController,
-    private taskSrv: TaskService,
-  ) {}
+  constructor(private alert: AlertController, private toast: ToastController, private taskSrv: TaskService) {}
 
   ngOnInit() {
     this.tasks$ = this.taskSrv.getObserver();

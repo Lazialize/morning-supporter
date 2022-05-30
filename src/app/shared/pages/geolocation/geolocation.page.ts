@@ -16,7 +16,7 @@ export class GeolocationPage implements OnInit {
   searchValue: string;
 
   constructor(
-    private modalController: ModalController,
+    public modalController: ModalController,
     private geocoding: GeocodingService,
     private auth: AuthService,
     private userSetting: UserSettingService,
@@ -37,10 +37,10 @@ export class GeolocationPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  onClick(lat: string, lon: string, name: string) {
+  async onClick(lat: string, lon: string, name: string): Promise<void> {
     // this.localStorageService.save(LocalStorageKey.location, { lat, lon, name });
     console.log({ name, lat, lon });
-    this.userSetting.updateUserSettings({
+    await this.userSetting.updateUserSettings({
       location: {
         name,
         lat,

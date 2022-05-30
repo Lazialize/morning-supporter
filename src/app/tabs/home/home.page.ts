@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
-import { GeolocationPage } from 'src/app/shared/pages/geolocation/geolocation.page';
 import { WeatherInfo } from 'src/app/shared/services/weather/types';
 import { WeatherService } from 'src/app/shared/services/weather/weather.service';
 import INotification from '../../shared/services/notification/interfaces/notification';
-import { LocalNotifications } from '@capacitor/local-notifications';
 import { TaskService } from 'src/app/shared/services/task/task.service';
 import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 import { UserSettingService } from 'src/app/shared/services/user-setting/user-setting.service';
@@ -32,7 +30,6 @@ export class HomePage implements OnInit, OnDestroy {
     private weather: WeatherService,
     private notification: NotificationService,
     private toastController: ToastController,
-    private modalController: ModalController,
     private taskSrv: TaskService,
     private userSetting: UserSettingService,
   ) {

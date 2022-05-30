@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { debounceTime, first } from 'rxjs/operators';
 import notifications from '../shared/constants/notifications';
-import { GeolocationPage } from '../shared/pages/geolocation/geolocation.page';
 import { AuthService } from '../shared/services/auth/auth.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
 import { TaskService } from '../shared/services/task/task.service';
@@ -36,6 +35,7 @@ export class TabsPage implements OnInit, OnDestroy {
     this.weather.initialize();
     this.notification.initialize();
     this.task.initialize(this.auth.getUserId());
+    this.userSetting.initialize(this.auth.getUserId());
 
     navigator.geolocation.getCurrentPosition(
       (position) => {

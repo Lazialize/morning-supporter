@@ -30,7 +30,7 @@ export class UserSettingService {
     return setDoc(this.getSettingRef(), data);
   }
 
-  updateUserSettings(data: IUserSettingUpdateData) {
+  updateUserSettings(data: IUserSettingUpdateData): Promise<void> {
     return updateDoc(this.getSettingRef(), { ...data });
   }
 

@@ -30,22 +30,10 @@ export class SettingsPage implements OnInit {
   }
 
   async openModal() {
-    this.modalController
-      .create({
-        component: GeolocationPage,
-      })
-      .then((modal) => modal.present());
-  }
-
-  openTemporaryTaskModal() {
-    this.modalController
-      .create({
-        component: TemporaryTaskPage,
-        componentProps: {
-          tasks$: this.userSettings$,
-        },
-      })
-      .then((modal) => modal.present());
+    const modal = await this.modalController.create({
+      component: GeolocationPage,
+    });
+    modal.present();
   }
 
   signOut() {
